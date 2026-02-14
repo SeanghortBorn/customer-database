@@ -2,9 +2,11 @@ import React from 'react'
 
 export default function PeopleList({ people }: { people: any[] }) {
   return (
-    <ul>
+    <ul className="list">
       {people.map(p => (
-        <li key={p.id}>{p.first_name} {p.last_name}</li>
+        <li className="list-item" key={p.id}>
+          <span>{p.first_name} {p.last_name}</span>
+        </li>
       ))}
     </ul>
   )

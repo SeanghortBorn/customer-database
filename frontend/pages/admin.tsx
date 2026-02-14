@@ -14,25 +14,38 @@ export default function AdminPage() {
 
   return (
     <Layout>
-      <h2>Admin — Invite user</h2>
-      <div style={{ maxWidth: 560 }}>
-        <input placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} style={{ width: '100%', marginBottom: 8 }} />
-        <select value={role} onChange={e => setRole(e.target.value)} style={{ marginBottom: 8 }}>
-          <option value="viewer">Viewer</option>
-          <option value="commenter">Commenter</option>
-          <option value="editor">Editor</option>
-          <option value="admin">Admin</option>
-        </select>
+      <div className="page-header">
         <div>
-          <button onClick={invite}>Send invite</button>
+          <h2>Admin</h2>
+          <div className="page-meta">Invite teammates and control access.</div>
+        </div>
+      </div>
+      <section className="card">
+        <div className="card-header">
+          <h3>Invite a user</h3>
+          <span className="chip">Role-based access</span>
+        </div>
+        <div className="form-grid">
+          <input className="input" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
+          <select className="select" value={role} onChange={e => setRole(e.target.value)}>
+            <option value="viewer">Viewer</option>
+            <option value="commenter">Commenter</option>
+            <option value="editor">Editor</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div className="actions" style={{ marginTop: 16 }}>
+          <button onClick={invite} className="btn btn-primary">Send invite</button>
         </div>
         {result && (
-          <div style={{ marginTop: 12 }}>
-            Invite token: <code>{result.token}</code>
-            <div>Accept URL: <code>{result.accept_url}</code></div>
+          <div className="card card-muted" style={{ marginTop: 16 }}>
+            <div className="page-meta">Invite token</div>
+            <div><strong>{result.token}</strong></div>
+            <div className="page-meta" style={{ marginTop: 8 }}>Accept URL</div>
+            <div style={{ wordBreak: 'break-all' }}>{result.accept_url}</div>
           </div>
         )}
-      </div>
+      </section>
     </Layout>
   )
 }

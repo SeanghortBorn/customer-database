@@ -1,0 +1,6 @@
+customer-database_db_1 is up-to-date
+customer-database_backend_1 is up-to-date
+Recreating customer-database_frontend_1 ... 
+Recreating customer-database_frontend_1 ... error
+
+ERROR: for customer-database_frontend_1  No such image: sha256:4e54c7b932b3432146ed80980fe44faeb196e4dc49ad93bab126a1ff56feb9fb

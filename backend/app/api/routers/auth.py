@@ -5,13 +5,13 @@ from sqlalchemy.orm import Session
 
 from app.db import session as db_session
 from app.db import models
-from app.schemas import UserCreate, UserOut, Token
+from app.schemas import UserCreate, UserOut, Token, RegisterResponse
 from app.core.security import get_password_hash, verify_password, create_access_token
 
 router = APIRouter()
 
 
-@router.post("/register", response_model=UserOut)
+@router.post("/register", response_model=RegisterResponse)
 def register(payload: UserCreate, invite_token: str | None = None, db: Session = Depends(db_session.get_db)):
     # If a user exists with a password, block register; if exists without password, set password (invite flow)
     existing = db.query(models.User).filter(models.User.email == payload.email).first()
@@ -33,7 +33,8 @@ def register(payload: UserCreate, invite_token: str | None = None, db: Session =
         db.add(existing)
         db.commit()
         db.refresh(existing)
-        return existing
+        access_token = create_access_token(subject=str(existing.id))
+        return {"access_token": access_token, "token_type": "bearer", "user": existing}
 
     if invite:
         # respect invite org and role
@@ -46,10 +47,12 @@ def register(payload: UserCreate, invite_token: str | None = None, db: Session =
         invite.accepted_by = user.id
         db.add(invite)
         db.commit()
-        return user
+        access_token = create_access_token(subject=str(user.id))
+        return {"access_token": access_token, "token_type": "bearer", "user": user}
 
     # No invite: create personal org
-    org = models.Organization(name=f"{payload.email} (org)")
+    org_name = payload.dict().get('org_name') or f"{payload.email} (org)"
+    org = models.Organization(name=org_name)
     db.add(org)
     db.commit()
     db.refresh(org)
@@ -58,7 +61,9 @@ def register(payload: UserCreate, invite_token: str | None = None, db: Session =
     db.add(user)
     db.commit()
     db.refresh(user)
-    return user
+    access_token = create_access_token(subject=str(user.id))
+    return {"access_token": access_token, "token_type": "bearer", "user": user}
+
 
 
 @router.post("/token", response_model=Token)

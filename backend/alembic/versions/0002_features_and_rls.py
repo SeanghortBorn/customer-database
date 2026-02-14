@@ -61,16 +61,17 @@ def upgrade():
         sa.Column('created_at', sa.DateTime(), nullable=True),
     )
 
-    # Indexes: GIN on JSONB columns
-    op.create_index('ix_people_custom_gin', 'people', ['custom'], postgresql_using='gin')
-    op.create_index('ix_properties_amenity_tags_gin', 'properties', ['amenity_tags'], postgresql_using='gin')
+    # Indexes: GIN on JSONB columns - skip JSON/GIN indexes as they're optional for MVP
+    # op.create_index('ix_people_custom_gin', 'people', ['custom'], postgresql_using='gin')
+    # op.create_index('ix_properties_amenity_tags_gin', 'properties', ['amenity_tags'], postgresql_using='gin')
 
     # Enable pg_trgm extension and create trigram index for name search
     op.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm')
     op.create_index('ix_people_name_trgm', 'people', ['first_name', 'last_name'], postgresql_using='gin', postgresql_ops={'first_name': 'gin_trgm_ops', 'last_name': 'gin_trgm_ops'})
 
     # RLS: use session variable zoneer.org (application must set per-session)
-    for tbl in ('people','properties','units','resource_shares','comments','activity_logs'):
+    # Only apply to tables that actually have org_id.
+    for tbl in ('people','properties','resource_shares','activity_logs'):
         op.execute(f"ALTER TABLE {tbl} ENABLE ROW LEVEL SECURITY")
         op.execute(
             f"CREATE POLICY {tbl}_org_isolation ON {tbl} USING (org_id = current_setting('zoneer.org', true)::uuid) WITH CHECK (org_id = current_setting('zoneer.org', true)::uuid);"
@@ -78,7 +79,7 @@ def upgrade():
 
 
 def downgrade():
-    for tbl in ('people','properties','units','resource_shares','comments','activity_logs'):
+    for tbl in ('people','properties','resource_shares','activity_logs'):
         try:
             op.execute(f"ALTER TABLE {tbl} DISABLE ROW LEVEL SECURITY")
         except Exception:
@@ -86,8 +87,9 @@ def downgrade():
 
     op.drop_index('ix_people_name_trgm', table_name='people')
     op.execute('DROP EXTENSION IF EXISTS pg_trgm')
-    op.drop_index('ix_properties_amenity_tags_gin', table_name='properties')
-    op.drop_index('ix_people_custom_gin', table_name='people')
+    # GIN indexes were skipped in upgrade
+    # op.drop_index('ix_properties_amenity_tags_gin', table_name='properties')
+    # op.drop_index('ix_people_custom_gin', table_name='people')
 
     op.drop_table('unit_price_history')
     op.drop_column('resource_shares', 'link_token')

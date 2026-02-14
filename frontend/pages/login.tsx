@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -28,24 +29,36 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ padding: 24 }}>
-      <h2>Sign in</h2>
-      <div style={{ marginBottom: 12 }}>
-        <button onClick={() => oauth('google')} style={{ marginRight: 8 }}>Sign in with Google</button>
-        <button onClick={() => oauth('microsoft')}>Sign in with Microsoft</button>
+    <div className="auth-shell">
+      <div className="auth-card float-in">
+        <div style={{ marginBottom: 16 }}>
+          <Link href="/" className="brand-title">
+            Zoneer
+          </Link>
+          <div className="page-meta">Welcome back. Sign in to continue.</div>
+        </div>
+        <div className="actions" style={{ marginBottom: 16 }}>
+          <button onClick={() => oauth('google')} className="btn btn-outline">Sign in with Google</button>
+          <button onClick={() => oauth('microsoft')} className="btn btn-outline">Sign in with Microsoft</button>
+        </div>
+        <form onSubmit={submit}>
+          <div className="form-grid">
+            <div>
+              <label>Email</label>
+              <input className="input" value={email} onChange={e => setEmail(e.target.value)} />
+            </div>
+            <div>
+              <label>Password</label>
+              <input className="input" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+            </div>
+          </div>
+          <div className="actions" style={{ marginTop: 16 }}>
+            <button type="submit" className="btn btn-primary">Sign in</button>
+            <Link href="/register" className="btn btn-ghost">Create account</Link>
+          </div>
+        </form>
+        {error && <div style={{ color: 'var(--danger)', marginTop: 8 }}>{error}</div>}
       </div>
-      <form onSubmit={submit} style={{ maxWidth: 400 }}>
-        <div style={{ marginBottom: 8 }}>
-          <label>Email</label>
-          <input value={email} onChange={e => setEmail(e.target.value)} style={{ width: '100%' }} />
-        </div>
-        <div style={{ marginBottom: 8 }}>
-          <label>Password</label>
-          <input type="password" value={password} onChange={e => setPassword(e.target.value)} style={{ width: '100%' }} />
-        </div>
-        <button type="submit">Sign in</button>
-      </form>
-      {error && <div style={{ color: 'red', marginTop: 8 }}>{error}</div>}
     </div>
   )
 }

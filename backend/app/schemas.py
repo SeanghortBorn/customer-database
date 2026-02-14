@@ -13,6 +13,7 @@ class UserBase(BaseModel):
         orm_mode = True
 
 
+
 class PersonCreate(BaseModel):
     first_name: str
     last_name: Optional[str]
@@ -33,6 +34,7 @@ class PersonOut(PersonCreate):
         orm_mode = True
 
 
+
 class UnitCreate(BaseModel):
     unit_no: str
     size: Optional[int]
@@ -51,11 +53,15 @@ class UnitOut(UnitCreate):
         orm_mode = True
 
 
+
 class PropertyCreate(BaseModel):
     name: str
-    type: Optional[str]
+    type: Optional[str]  # "Rental Room", "Apartment", "Rental House", "Other"
     address: Optional[str]
     google_maps_url: Optional[str]
+    website_social_media: Optional[str]  # property website or social media link
+    owner_id: Optional[UUID] = None  # reference to a Person (owner/landlord)
+    source: Optional[str]  # where the property info came from
     reference_link: Optional[str]
     notes: Optional[str]
     currency: Optional[str] = "USD"
@@ -68,10 +74,12 @@ class PropertyOut(PropertyCreate):
     org_id: UUID
     unit_count: int = 0
     created_at: Optional[datetime]
+    owner: Optional[PersonOut] = None  # owner details populated if owner_id is set
     units: Optional[List[UnitOut]] = []
 
     class Config:
         orm_mode = True
+
 
 
 # --- Authentication / user schemas ---
@@ -79,6 +87,7 @@ class UserCreate(BaseModel):
     email: str
     password: str
     name: Optional[str]
+    org_name: Optional[str] = None
 
 
 class UserOut(BaseModel):
@@ -92,9 +101,16 @@ class UserOut(BaseModel):
         orm_mode = True
 
 
+
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+
+class RegisterResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserOut
 
 
 class TokenPayload(BaseModel):

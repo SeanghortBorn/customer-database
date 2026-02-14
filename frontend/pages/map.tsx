@@ -11,13 +11,33 @@ export default function MapPage() {
 
   return (
     <Layout>
-      <h2>Map view (simple)</h2>
-      <p>This view links to each property's Google Maps URL (if available).</p>
-      <ul>
-        {props.map(p => (
-          <li key={p.id}>{p.name} — {p.address} {p.google_maps_url ? <a href={p.google_maps_url} target="_blank">Map</a> : null}</li>
-        ))}
-      </ul>
+      <div className="page-header">
+        <div>
+          <h2>Map view</h2>
+          <div className="page-meta">Jump to property locations in Google Maps.</div>
+        </div>
+      </div>
+      <section className="card">
+        <div className="card-header">
+          <h3>Locations</h3>
+          <span className="chip">{props.length} places</span>
+        </div>
+        <ul className="list">
+          {props.map(p => (
+            <li className="list-item" key={p.id}>
+              <div>
+                <strong>{p.name}</strong>
+                <div className="page-meta">{p.address || 'No address yet'}</div>
+              </div>
+              {p.google_maps_url ? (
+                <a className="btn btn-ghost" href={p.google_maps_url} target="_blank" rel="noreferrer">Open map</a>
+              ) : (
+                <span className="page-meta">No map link</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
     </Layout>
   )
 }

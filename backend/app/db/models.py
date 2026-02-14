@@ -41,6 +41,8 @@ class GUID(TypeDecorator):
     def process_result_value(self, value, dialect):
         if value is None:
             return value
+        if isinstance(value, uuid.UUID):
+            return value
         return uuid.UUID(value)
 
 
@@ -87,9 +89,12 @@ class Property(Base):
     id = Column(GUID(), primary_key=True, default=uuid.uuid4)
     org_id = Column(GUID(), ForeignKey("organizations.id"), nullable=False, index=True)
     name = Column(String, nullable=False)
-    type = Column(String, nullable=True)  # apartment, rental_room, house, etc.
+    type = Column(String, nullable=True)  # "Rental Room", "Apartment", "Rental House", "Other"
     address = Column(String, nullable=True)
     google_maps_url = Column(String, nullable=True)
+    website_social_media = Column(String, nullable=True)  # property website or social media link
+    owner_id = Column(GUID(), ForeignKey("people.id"), nullable=True)
+    source = Column(String, nullable=True)  # where property info came from
     reference_link = Column(String, nullable=True)
     notes = Column(Text, nullable=True)
 
@@ -106,6 +111,7 @@ class Property(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     org = relationship("Organization")
+    owner = relationship("Person")
     units = relationship("Unit", back_populates="property", cascade="all, delete-orphan")
 
 

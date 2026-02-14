@@ -27,9 +27,11 @@ export default function AcceptInvitePage() {
   }, [token])
 
   return (
-    <div style={{ padding: 24 }}>
-      <h2>Accepting invite...</h2>
-      {message && <div>{message}</div>}
+    <div className="auth-shell">
+      <div className="auth-card float-in">
+        <h2>Accepting invite...</h2>
+        <p>{message || 'We are validating the invitation and setting up your access.'}</p>
+      </div>
     </div>
   )
 }

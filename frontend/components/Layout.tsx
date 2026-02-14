@@ -39,39 +39,51 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div style={{ maxWidth: 1000, margin: '24px auto', padding: 16 }}>
-      <header style={{ marginBottom: 20 }}>
-        <h1><Link href="/">Zoneer</Link></h1>
-        <nav style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Link href="/people" style={{ marginRight: 12 }}>People</Link>
-          <Link href="/properties" style={{ marginRight: 12 }}>Properties</Link>
-          <input placeholder="Search people / properties" style={{ padding: '4px 8px', borderRadius: 6, border: '1px solid #ddd' }} onKeyDown={async (e) => {
-            if (e.key === 'Enter') {
-              const q = (e.target as HTMLInputElement).value
-              const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/search/?q=${encodeURIComponent(q)}`)
-              const data = await res.json()
-              alert(JSON.stringify(data, null, 2))
-            }
-          }} />
-          {!isAuthenticated ? (
-            <>
-              <Link href="/login" style={{ marginRight: 8 }}>Sign in</Link>
-              <Link href="/register">Register</Link>
-            </>
-          ) : (
-            <>
-              <Link href="/admin" style={{ marginRight: 12 }}>Admin</Link>
-              <button onClick={logout}>Sign out</button>
-            </>
-          )}
-        </nav>
+    <div className="app-shell">
+      <header className="topbar">
+        <div className="topbar-inner">
+          <div className="brand">
+            <Link href="/" className="brand-title">
+              Zoneer
+            </Link>
+            <span className="brand-subtitle">Property ops and customer care</span>
+          </div>
+          <nav className="nav-links">
+            <Link href="/people" className="nav-link">People</Link>
+            <Link href="/properties" className="nav-link">Properties</Link>
+            <Link href="/map" className="nav-link">Map</Link>
+            <input
+              className="search-input"
+              placeholder="Search people or properties"
+              onKeyDown={async (e) => {
+                if (e.key === 'Enter') {
+                  const q = (e.target as HTMLInputElement).value
+                  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/search/?q=${encodeURIComponent(q)}`)
+                  const data = await res.json()
+                  alert(JSON.stringify(data, null, 2))
+                }
+              }}
+            />
+            {!isAuthenticated ? (
+              <>
+                <Link href="/login" className="nav-link">Sign in</Link>
+                <Link href="/register" className="nav-link">Register</Link>
+              </>
+            ) : (
+              <>
+                <Link href="/admin" className="nav-link">Admin</Link>
+                <button onClick={logout} className="btn btn-outline">Sign out</button>
+              </>
+            )}
+          </nav>
+        </div>
       </header>
 
       {notification && (
-        <div style={{ position: 'fixed', right: 20, top: 20, background: '#111827', color: '#fff', padding: '8px 12px', borderRadius: 6 }}>{notification}</div>
+        <div className="toast">{notification}</div>
       )}
 
-      <main>{children}</main>
+      <main className="content-shell">{children}</main>
     </div>
   )
 }

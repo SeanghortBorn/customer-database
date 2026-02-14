@@ -9,9 +9,7 @@ from app.core.config import settings
 
 app = FastAPI(title="Zoneer — Customer DB (backend)")
 
-# Session middleware required by OAuth (Authlib) to store state
-app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)
-
+# CORS middleware must be added FIRST so it executes LAST (middleware runs in reverse order)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -19,6 +17,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Session middleware required by OAuth (Authlib) to store state
+app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)
 
 # simple in-memory WebSocket connection registry and broadcast helper (MVP)
 app.state.ws_connections = set()
@@ -51,6 +52,9 @@ async def websocket_endpoint(websocket: WebSocket):
 
 # auth router exposes /api/auth endpoints
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+
+# Backward-compatible route (convenience)
+app.include_router(auth.router, prefix="/api", tags=["auth-compat"], include_in_schema=False)
 
 # core CRUD routers (RLS session var set on these routes)
 app.include_router(people.router, prefix="/api/people", tags=["people"], dependencies=[Depends(deps.set_db_org)])

@@ -32,55 +32,76 @@ export default function PeoplePage() {
 
   return (
     <Layout>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>People</h2>
+      <div className="page-header">
         <div>
-          <button onClick={() => setShowForm(s => !s)} style={{ marginRight: 8 }}>New Person</button>
+          <h2>People</h2>
+          <div className="page-meta">Manage your customer records and access.</div>
         </div>
-      </div>
-
-      <div style={{ marginBottom: 12 }}>
-        <button onClick={async () => { const name = prompt('Saved view name'); if (!name) return; await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/saved-views/`, { name, resource_type: 'people', filters: {}, columns: [] }); alert('Saved view created') }}>Save current view</button>
+        <div className="actions">
+          <button onClick={() => setShowForm(s => !s)} className="btn btn-primary">New person</button>
+          <button
+            onClick={async () => {
+              const name = prompt('Saved view name')
+              if (!name) return
+              await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/saved-views/`, { name, resource_type: 'people', filters: {}, columns: [] })
+              alert('Saved view created')
+            }}
+            className="btn btn-outline"
+          >
+            Save view
+          </button>
+        </div>
       </div>
 
       {showForm && (
-        <div style={{ marginBottom: 12, maxWidth: 600 }}>
-          <input placeholder="First name" value={form.first_name} onChange={e => setForm({ ...form, first_name: e.target.value })} />
-          <input placeholder="Last name" value={form.last_name} onChange={e => setForm({ ...form, last_name: e.target.value })} />
-          <input placeholder="Phone" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
-          <input placeholder="Email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
-          <div style={{ marginTop: 8 }}>
-            <button onClick={create}>Create</button>
-            <button onClick={() => setShowForm(false)} style={{ marginLeft: 8 }}>Cancel</button>
+        <section className="card card-muted float-in">
+          <div className="card-header">
+            <h3>Add a new person</h3>
           </div>
-        </div>
+          <div className="form-grid">
+            <input className="input" placeholder="First name" value={form.first_name} onChange={e => setForm({ ...form, first_name: e.target.value })} />
+            <input className="input" placeholder="Last name" value={form.last_name} onChange={e => setForm({ ...form, last_name: e.target.value })} />
+            <input className="input" placeholder="Phone" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
+            <input className="input" placeholder="Email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
+          </div>
+          <div className="actions" style={{ marginTop: 16 }}>
+            <button onClick={create} className="btn btn-primary">Create</button>
+            <button onClick={() => setShowForm(false)} className="btn btn-ghost">Cancel</button>
+          </div>
+        </section>
       )}
 
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {people.map(p => (
-            <tr key={p.id}>
-              <td>{p.first_name} {p.last_name}</td>
-              <td>{p.phone}</td>
-              <td>{p.email}</td>
-              <td style={{ textAlign: 'right' }}>
-                <button onClick={() => setSharing({ id: p.id, open: true })}>Share</button>
-              </td>
+      <section className="card">
+        <div className="card-header">
+          <h3>Directory</h3>
+          <span className="chip">{people.length} records</span>
+        </div>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {people.map(p => (
+              <tr key={p.id}>
+                <td data-label="Name">{p.first_name} {p.last_name}</td>
+                <td data-label="Phone">{p.phone || '-'}</td>
+                <td data-label="Email">{p.email || '-'}</td>
+                <td data-label="Actions" className="align-right">
+                  <button onClick={() => setSharing({ id: p.id, open: true })} className="btn btn-ghost">Share</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
 
       {sharing.open && sharing.id && (
-        <div style={{ position: 'fixed', right: 24, top: 80 }}>
+        <div style={{ position: 'fixed', right: 24, top: 110 }}>
           <ShareDialog resourceType="person" resourceId={sharing.id} onClose={() => setSharing({ id: null, open: false })} onShared={fetch} />
         </div>
       )}

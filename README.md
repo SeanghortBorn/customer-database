@@ -61,3 +61,19 @@ Testing
   - Start backend on port `8000` and run `cd frontend && npm ci && npx playwright install --with-deps && npm run test:e2e`.
   - CI will automatically run E2E on push/PR.
 
+## 🚀 Production Deployment
+
+This app is ready to deploy to production! See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for detailed instructions.
+
+**Quick Start:**
+1. Run `./check-deployment.sh` to verify you're ready
+2. Create accounts on [Supabase](https://supabase.com), [Render](https://render.com), and [Vercel](https://vercel.com)
+3. Follow the step-by-step guide in [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+**Stack:**
+- 🗄️ **Database:** Supabase (PostgreSQL)
+- 🚀 **Backend:** Render (FastAPI)
+- 🌐 **Frontend:** Vercel (Next.js)
+
+All services offer generous free tiers perfect for getting started!
+

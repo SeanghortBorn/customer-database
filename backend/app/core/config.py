@@ -20,9 +20,4 @@ class Settings(BaseSettings):
     SMTP_USERNAME: str | None = os.getenv("SMTP_USERNAME")
     SMTP_PASSWORD: str | None = os.getenv("SMTP_PASSWORD")
     SMTP_FROM: str | None = os.getenv("SMTP_FROM")
-
-    class Config:
-        env_file = ".env"
-
-
 settings = Settings()

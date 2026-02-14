@@ -30,25 +30,31 @@ export default function ShareDialog({ resourceType, resourceId, onClose, onShare
   }
 
   return (
-    <div style={{ background: '#fff', border: '1px solid #ddd', padding: 12, width: 320 }}>
-      <h3>Share {resourceType}</h3>
-      <div style={{ marginBottom: 8 }}>
-        <label>Recipient email</label>
-        <input value={email} onChange={e => setEmail(e.target.value)} style={{ width: '100%' }} />
+    <div className="card" style={{ width: 340 }}>
+      <div className="card-header">
+        <h3>Share {resourceType}</h3>
+        <span className="chip">Invite access</span>
       </div>
-      <div style={{ marginBottom: 8 }}>
-        <label>Role</label>
-        <select value={role} onChange={e => setRole(e.target.value)}>
-          <option value="viewer">Viewer</option>
-          <option value="commenter">Commenter</option>
-          <option value="editor">Editor</option>
-        </select>
+      <div className="form-grid">
+        <div>
+          <label>Recipient email</label>
+          <input className="input" value={email} onChange={e => setEmail(e.target.value)} />
+        </div>
+        <div>
+          <label>Role</label>
+          <select className="select" value={role} onChange={e => setRole(e.target.value)}>
+            <option value="viewer">Viewer</option>
+            <option value="commenter">Commenter</option>
+            <option value="editor">Editor</option>
+          </select>
+        </div>
       </div>
-      <div style={{ display: 'flex', gap: 8 }}>
-        <button onClick={submit}>Share</button>
-        <button onClick={onClose}>Cancel</button>
+      <div className="actions" style={{ marginTop: 12 }}>
+        <button onClick={submit} className="btn btn-primary">Share</button>
+        <button onClick={createLink} className="btn btn-outline">Copy link</button>
+        <button onClick={onClose} className="btn btn-ghost">Cancel</button>
       </div>
-      {error && <div style={{ color: 'red', marginTop: 8 }}>{error}</div>}
+      {error && <div style={{ color: 'var(--danger)', marginTop: 8 }}>{error}</div>}
     </div>
   )
 }
