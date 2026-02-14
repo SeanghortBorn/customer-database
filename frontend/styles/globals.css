@@ -1,0 +1,5 @@
+html, body, #__next { height: 100%; }
+body { margin: 0; font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; color: #111827; background: #f8fafc }
+h1, h2, h3 { color: #0f172a }
+table { background: #fff; border: 1px solid #e5e7eb }
+th, td { padding: 8px 12px; border-bottom: 1px solid #f3f4f6 }

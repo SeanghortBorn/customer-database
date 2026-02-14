@@ -1,0 +1,15 @@
+fastapi==0.100.0
+uvicorn[standard]==0.22.0
+SQLAlchemy==1.4.50
+alembic==1.11.1
+psycopg2-binary==2.9.7
+python-dotenv==1.0.0
+pydantic==1.10.10
+passlib[bcrypt]==1.7.4
+python-jose==3.3.0
+authlib==1.2.0
+itsdangerous==2.1.2
+python-multipart==0.0.6
+pytest==7.4.0
+pytest-asyncio==0.21.0
+httpx==0.24.0
