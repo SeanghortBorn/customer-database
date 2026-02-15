@@ -3,13 +3,13 @@ from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
 
-from ..shared.database import get_db
-from ..shared.auth import get_current_user, CurrentUser
-from ..shared.schemas import (
+from shared.database import get_db
+from shared.auth import get_current_user, CurrentUser
+from shared.schemas import (
     RelationshipCreate, RelationshipResponse,
     RelationshipLinkCreate, RelationshipLinkResponse
 )
-from .service import (
+from services.relationship.service import (
     create_relationship, get_list_relationships, get_relationship, delete_relationship,
     create_link, get_relationship_links, delete_link
 )

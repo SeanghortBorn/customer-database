@@ -3,8 +3,8 @@ from uuid import UUID
 from datetime import datetime
 from typing import List, Optional
 
-from ..shared.models import Relationship, RelationshipLink, AuditLog, List as ListModel
-from ..shared.schemas import (
+from shared.models import Relationship, RelationshipLink, AuditLog, List as ListModel
+from shared.schemas import (
     RelationshipCreate, RelationshipResponse,
     RelationshipLinkCreate, RelationshipLinkResponse
 )
@@ -33,7 +33,7 @@ def create_relationship(
         action='relationship.create',
         entity_type='relationship',
         entity_id=db_relationship.id,
-        metadata={
+        details={
             'name': relationship_data.name,
             'target_list_id': str(relationship_data.target_list_id),
             'type': relationship_data.relationship_type
@@ -67,7 +67,7 @@ def delete_relationship(db: Session, relationship_id: UUID, user_id: UUID) -> No
         action='relationship.delete',
         entity_type='relationship',
         entity_id=relationship_id,
-        metadata={'name': db_relationship.name}
+        details={'name': db_relationship.name}
     )
     db.add(audit)
     db.commit()
@@ -108,7 +108,7 @@ def create_link(
         action='relationship.link',
         entity_type='relationship_link',
         entity_id=db_link.id,
-        metadata={
+        details={
             'relationship_id': str(relationship_id),
             'source_item_id': str(link_data.source_item_id),
             'target_item_id': str(link_data.target_item_id)
@@ -141,7 +141,7 @@ def delete_link(db: Session, link_id: UUID, user_id: UUID) -> None:
         action='relationship.unlink',
         entity_type='relationship_link',
         entity_id=link_id,
-        metadata={
+        details={
             'relationship_id': str(db_link.relationship_id),
             'source_item_id': str(db_link.source_item_id),
             'target_item_id': str(db_link.target_item_id)

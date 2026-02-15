@@ -3,10 +3,10 @@ from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
 
-from ..shared.database import get_db
-from ..shared.auth import get_current_user, get_workspace_membership, CurrentUser
-from ..shared.models import AuditLog
-from ..shared.schemas import AuditLogResponse
+from shared.database import get_db
+from shared.auth import get_current_user, get_workspace_membership, CurrentUser
+from shared.models import AuditLog
+from shared.schemas import AuditLogResponse
 
 router = APIRouter()
 

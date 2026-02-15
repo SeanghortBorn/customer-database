@@ -3,13 +3,13 @@ from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
 
-from ..shared.database import get_db
-from ..shared.auth import get_current_user, get_workspace_membership, require_role, CurrentUser
-from ..shared.schemas import (
+from shared.database import get_db
+from shared.auth import get_current_user, get_workspace_membership, require_role, CurrentUser
+from shared.schemas import (
     WorkspaceCreate, WorkspaceUpdate, WorkspaceResponse,
     InviteCreate, MembershipResponse, RoleUpdate
 )
-from .service import (
+from services.workspace.service import (
     create_workspace, get_user_workspaces, get_workspace, 
     update_workspace, delete_workspace,
     invite_member, accept_invite, get_workspace_members,

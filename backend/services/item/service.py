@@ -3,8 +3,8 @@ from uuid import UUID
 from datetime import datetime
 from typing import List, Optional
 
-from ..shared.models import Item, AuditLog, List as ListModel, Comment
-from ..shared.schemas import (
+from shared.models import Item, AuditLog, List as ListModel, Comment
+from shared.schemas import (
     ItemCreate, ItemUpdate, ItemResponse,
     CommentCreate, CommentResponse
 )
@@ -32,7 +32,7 @@ def create_item(db: Session, list_id: UUID, item_data: ItemCreate, user_id: UUID
         action='item.create',
         entity_type='item',
         entity_id=db_item.id,
-        metadata={'list_id': str(list_id), 'title': item_data.title}
+        details={'list_id': str(list_id), 'title': item_data.title}
     )
     db.add(audit)
     
@@ -108,7 +108,7 @@ def archive_item(db: Session, item_id: UUID, user_id: UUID) -> Item:
         action='item.delete',
         entity_type='item',
         entity_id=item_id,
-        metadata={'title': db_item.title}
+        details={'title': db_item.title}
     )
     db.add(audit)
     
@@ -137,7 +137,7 @@ def create_comment(db: Session, item_id: UUID, comment_data: CommentCreate, user
         action='comment.create',
         entity_type='comment',
         entity_id=db_comment.id,
-        metadata={'item_id': str(item_id)}
+        details={'item_id': str(item_id)}
     )
     db.add(audit)
     
@@ -164,7 +164,7 @@ def delete_comment(db: Session, comment_id: UUID, user_id: UUID) -> None:
         action='comment.delete',
         entity_type='comment',
         entity_id=comment_id,
-        metadata={'item_id': str(db_comment.item_id)}
+        details={'item_id': str(db_comment.item_id)}
     )
     db.add(audit)
     db.commit()

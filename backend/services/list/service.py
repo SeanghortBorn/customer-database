@@ -3,8 +3,8 @@ from uuid import UUID
 from datetime import datetime
 from typing import List, Optional
 
-from ..shared.models import List as ListModel, Column_, Item, AuditLog
-from ..shared.schemas import (
+from shared.models import List as ListModel, Column_, Item, AuditLog
+from shared.schemas import (
     ListCreate, ListUpdate, ListResponse,
     ColumnCreate, ColumnUpdate, ColumnResponse
 )
@@ -28,7 +28,7 @@ def create_list(db: Session, workspace_id: UUID, list_data: ListCreate, user_id:
         action='list.create',
         entity_type='list',
         entity_id=db_list.id,
-        metadata={'list_name': list_data.name}
+        details={'list_name': list_data.name}
     )
     db.add(audit)
     
@@ -85,7 +85,7 @@ def archive_list(db: Session, list_id: UUID, user_id: UUID) -> ListModel:
         action='list.delete',
         entity_type='list',
         entity_id=list_id,
-        metadata={'list_name': db_list.name}
+        details={'list_name': db_list.name}
     )
     db.add(audit)
     
@@ -119,7 +119,7 @@ def create_column(db: Session, list_id: UUID, column_data: ColumnCreate, user_id
         action='column.create',
         entity_type='column',
         entity_id=db_column.id,
-        metadata={'list_id': str(list_id), 'column_name': column_data.name, 'column_type': column_data.type}
+        details={'list_id': str(list_id), 'column_name': column_data.name, 'column_type': column_data.type}
     )
     db.add(audit)
     
@@ -175,7 +175,7 @@ def delete_column(db: Session, column_id: UUID, user_id: UUID) -> None:
         action='column.delete',
         entity_type='column',
         entity_id=column_id,
-        metadata={'column_name': db_column.name}
+        details={'column_name': db_column.name}
     )
     db.add(audit)
     db.commit()

@@ -3,14 +3,14 @@ from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
 
-from ..shared.database import get_db
-from ..shared.auth import get_current_user, CurrentUser
-from ..shared.models import WorkspaceMembership, List as ListModel
-from ..shared.schemas import (
+from shared.database import get_db
+from shared.auth import get_current_user, CurrentUser
+from shared.models import WorkspaceMembership, List as ListModel
+from shared.schemas import (
     ItemCreate, ItemUpdate, ItemResponse,
     CommentCreate, CommentResponse
 )
-from .service import (
+from services.item.service import (
     create_item, get_list_items, get_item, update_item, archive_item,
     create_comment, get_item_comments, delete_comment
 )

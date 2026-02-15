@@ -4,8 +4,8 @@ from datetime import datetime
 from typing import List, Optional
 import secrets
 
-from ..shared.models import Workspace, WorkspaceMembership, AuditLog
-from ..shared.schemas import (
+from shared.models import Workspace, WorkspaceMembership, AuditLog
+from shared.schemas import (
     WorkspaceCreate, WorkspaceUpdate, WorkspaceResponse,
     InviteCreate, MembershipResponse, RoleUpdate
 )
@@ -38,7 +38,7 @@ def create_workspace(db: Session, workspace: WorkspaceCreate, user_id: UUID) -> 
         action='workspace.create',
         entity_type='workspace',
         entity_id=db_workspace.id,
-        metadata={'workspace_name': workspace.name}
+        details={'workspace_name': workspace.name}
     )
     db.add(audit)
     
@@ -96,7 +96,7 @@ def delete_workspace(db: Session, workspace_id: UUID, user_id: UUID) -> None:
         action='workspace.delete',
         entity_type='workspace',
         entity_id=workspace_id,
-        metadata={}
+        details={}
     )
     db.add(audit)
     db.commit()
@@ -140,7 +140,7 @@ def invite_member(
         action='membership.invite',
         entity_type='membership',
         entity_id=membership.id,
-        metadata={'email': invite.email, 'role': invite.role}
+        details={'email': invite.email, 'role': invite.role}
     )
     db.add(audit)
     
@@ -169,7 +169,7 @@ def accept_invite(db: Session, invite_token: str, user_id: UUID) -> WorkspaceMem
         action='membership.accept',
         entity_type='membership',
         entity_id=membership.id,
-        metadata={'email': membership.invite_email}
+        details={'email': membership.invite_email}
     )
     db.add(audit)
     
@@ -213,7 +213,7 @@ def update_member_role(
         action='membership.role_change',
         entity_type='membership',
         entity_id=membership_id,
-        metadata={'old_role': old_role, 'new_role': role_update.role}
+        details={'old_role': old_role, 'new_role': role_update.role}
     )
     db.add(audit)
     
@@ -245,7 +245,7 @@ def remove_member(db: Session, membership_id: UUID, remover_id: UUID) -> None:
         action='membership.remove',
         entity_type='membership',
         entity_id=membership_id,
-        metadata={'user_id': str(membership.user_id), 'role': membership.role}
+        details={'user_id': str(membership.user_id), 'role': membership.role}
     )
     db.add(audit)
     db.commit()

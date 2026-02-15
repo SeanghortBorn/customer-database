@@ -2,7 +2,7 @@ from sqlalchemy import Column, String, Text, DateTime, Enum, ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.sql import func
 import uuid
-from ..database import Base
+from shared.database import Base
 
 class Workspace(Base):
     __tablename__ = 'workspaces'
@@ -113,5 +113,5 @@ class AuditLog(Base):
     action = Column(Text, nullable=False)
     entity_type = Column(Text)
     entity_id = Column(UUID(as_uuid=True))
-    metadata = Column(JSONB, default={})
+    details = Column(JSONB, default={})
     created_at = Column(DateTime(timezone=True), server_default=func.now())

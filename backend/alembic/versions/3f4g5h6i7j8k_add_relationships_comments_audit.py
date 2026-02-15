@@ -77,7 +77,7 @@ def upgrade() -> None:
         sa.Column('action', sa.Text(), nullable=False),
         sa.Column('entity_type', sa.Text(), nullable=True),
         sa.Column('entity_id', sa.UUID(), nullable=True),
-        sa.Column('metadata', postgresql.JSONB(astext_type=sa.Text()), nullable=True),
+        sa.Column('details', postgresql.JSONB(astext_type=sa.Text()), nullable=True),
         sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
         sa.ForeignKeyConstraint(['workspace_id'], ['workspaces.id'], ondelete='CASCADE'),
         sa.PrimaryKeyConstraint('id')
