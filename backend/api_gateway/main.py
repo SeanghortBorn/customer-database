@@ -1,12 +1,20 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 app = FastAPI(title="Customer Database API", version="0.1.0")
 
-# CORS
+# CORS - allow frontend origins
+allowed_origins = [
+    "http://localhost:3000",  # Local development
+    os.getenv("FRONTEND_URL", ""),  # Production frontend
+]
+# Remove empty strings
+allowed_origins = [origin for origin in allowed_origins if origin]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
