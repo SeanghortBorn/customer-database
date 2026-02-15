@@ -32,12 +32,15 @@ def upgrade() -> None:
     )
     
     # Create relationships table
+    # Use postgresql.ENUM with create_type=False since we already created it above
+    relationship_type_enum = postgresql.ENUM('one_to_many', 'many_to_many', name='relationship_type', create_type=False)
+    
     op.create_table('relationships',
         sa.Column('id', sa.UUID(), nullable=False),
         sa.Column('list_id', sa.UUID(), nullable=False),
         sa.Column('name', sa.Text(), nullable=False),
         sa.Column('target_list_id', sa.UUID(), nullable=False),
-        sa.Column('relationship_type', sa.Enum('one_to_many', 'many_to_many', name='relationship_type'), nullable=False),
+        sa.Column('relationship_type', relationship_type_enum, nullable=False),
         sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
         sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
         sa.ForeignKeyConstraint(['list_id'], ['lists.id'], ondelete='CASCADE'),
