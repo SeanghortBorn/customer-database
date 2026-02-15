@@ -219,6 +219,23 @@ Need to add content?
 └─ Create new file with proper naming + header
 ```
 
+#### Environment Management
+
+**CRITICAL:** This project uses **Conda**, NOT Python venv!
+
+1. **Never suggest venv** - Always use conda environment "cds"
+2. **Environment file** - All dependencies in `environment.yml`
+3. **Activation** - Project uses direnv for auto-activation (see `.envrc`)
+4. **Documentation** - See `docs/00-getting-started/CONDA_SETUP.md`
+
+When discussing Python setup:
+- ✅ "Activate the conda environment: `conda activate cds`"
+- ✅ "Add package to `environment.yml` and run `conda env update`"
+- ✅ "Install direnv for automatic activation"
+- ❌ "Create a virtual environment: `python -m venv venv`"
+- ❌ "Activate venv: `source venv/bin/activate`"
+- ❌ "Use `pip install -r requirements.txt`"
+
 ---
 
 ## 🔍 Cleanup Commands

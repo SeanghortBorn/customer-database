@@ -8,7 +8,8 @@ This guide will get your development environment running with the first deployab
 
 ## Prerequisites
 
-- **Python:** 3.11+
+- **Conda:** Miniconda or Anaconda (for Python environment)
+- **Python:** 3.11+ (managed by conda)
 - **Node.js:** 20+
 - **Docker:** For local database
 - **Git:** Version control
@@ -17,6 +18,8 @@ This guide will get your development environment running with the first deployab
   - Supabase (free tier)
   - Render (free tier for dev)
   - Vercel (free tier)
+
+**⚠️ Important:** This project uses **Conda** for environment management, not venv. See [CONDA_SETUP.md](./CONDA_SETUP.md) for details.
 
 ---
 
@@ -46,6 +49,10 @@ ENV/
 *.egg-info/
 dist/
 build/
+
+# Conda
+.conda/
+environment.yml.bak
 
 # Node
 node_modules/
@@ -82,14 +89,20 @@ mkdir -p backend/{api_gateway,services/workspace,shared/{models,schemas},alembic
 cd backend
 ```
 
-### Install Python Dependencies
+### Setup Conda Environment
 
 ```bash
-# Create virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+# Activate conda environment (from project root)
+cd /home/seanghortborn/projects/customer-database
+conda activate cds
 
-# Create requirements.txt
+# If environment doesn't exist, create it:
+# conda env create -f environment.yml
+
+# Go to backend folder
+cd backend
+
+# Create requirements.txt (for backend specific packages)
 cat > requirements.txt << 'EOF'
 fastapi==0.109.0
 uvicorn[standard]==0.27.0

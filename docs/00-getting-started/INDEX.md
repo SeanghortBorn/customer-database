@@ -23,6 +23,14 @@
 - Troubleshooting guide
 - **Read this if:** You want to get the dev environment running quickly
 
+### [CONDA_SETUP.md](./CONDA_SETUP.md)
+**Conda Environment Setup & Auto-Activation**
+- Conda environment configuration (environment name: "cds")
+- Auto-activation with direnv setup
+- Daily usage and troubleshooting
+- AI agent instructions (NEVER suggest venv)
+- **Read this if:** You need to understand why we use conda and how to set it up
+
 ### [IMPLEMENTATION_ROADMAP.md](./IMPLEMENTATION_ROADMAP.md)
 **Comprehensive Implementation Guide**
 - Complete technology stack recommendations
@@ -36,14 +44,16 @@
 ## 🎯 Recommended Reading Order
 
 ### For New Developers
-1. **[QUICK_START.md](./QUICK_START.md)** - Get environment running (30 min)
-2. **[ACTION_PLAN.md](./ACTION_PLAN.md)** - Understand what to build (15 min)
-3. **[IMPLEMENTATION_ROADMAP.md](./IMPLEMENTATION_ROADMAP.md)** - Get detailed code examples (1 hour)
+1. **[CONDA_SETUP.md](./CONDA_SETUP.md)** - Setup conda environment first (10 min)
+2. **[QUICK_START.md](./QUICK_START.md)** - Get environment running (30 min)
+3. **[ACTION_PLAN.md](./ACTION_PLAN.md)** - Understand what to build (15 min)
+4. **[IMPLEMENTATION_ROADMAP.md](./IMPLEMENTATION_ROADMAP.md)** - Get detailed code examples (1 hour)
 
 ### For AI Agents
-1. **[IMPLEMENTATION_ROADMAP.md](./IMPLEMENTATION_ROADMAP.md)** - Technical implementation details
-2. **[ACTION_PLAN.md](./ACTION_PLAN.md)** - Task breakdown and priorities
-3. **[QUICK_START.md](./QUICK_START.md)** - Setup instructions
+1. **[CONDA_SETUP.md](./CONDA_SETUP.md)** - CRITICAL: Learn conda setup (never suggest venv!)
+2. **[IMPLEMENTATION_ROADMAP.md](./IMPLEMENTATION_ROADMAP.md)** - Technical implementation details
+3. **[ACTION_PLAN.md](./ACTION_PLAN.md)** - Task breakdown and priorities
+4. **[QUICK_START.md](./QUICK_START.md)** - Setup instructions
 
 ### For Project Managers
 1. **[ACTION_PLAN.md](./ACTION_PLAN.md)** - Timeline and deliverables

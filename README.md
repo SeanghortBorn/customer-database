@@ -179,26 +179,31 @@ customer-database/
 
 ### Prerequisites
 
-- **Python**: 3.11 or higher
+- **Conda**: Miniconda or Anaconda (for Python environment management)
+- **Python**: 3.11+ (managed by conda)
 - **Node.js**: 20 or higher
 - **Docker**: For local database
 - **Git**: Version control
 
+**⚠️ Note:** This project uses **Conda**, not Python venv. See [CONDA_SETUP.md](./docs/00-getting-started/CONDA_SETUP.md).
+
 ### Quick Setup (30 minutes)
 
-**Detailed instructions**: See [QUICK_START.md](./QUICK_START.md)
+**Detailed instructions**: See [QUICK_START.md](./docs/00-getting-started/QUICK_START.md)
 
 ```bash
-# 1. Backend setup
+# 1. Setup conda environment
+./setup-conda.sh
+conda activate cds
+
+# 2. Backend setup
 cd backend
-python -m venv .venv
-source .venv/bin/activate
 pip install -r requirements.txt
 docker compose up -d
 alembic upgrade head
 python -m api_gateway.main
 
-# 2. Frontend setup
+# 3. Frontend setup (new terminal)
 cd frontend
 npm install
 npm run dev
