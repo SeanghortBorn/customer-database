@@ -109,10 +109,10 @@ uvicorn[standard]==0.27.0
 sqlalchemy==2.0.25
 alembic==1.13.1
 psycopg2-binary==2.9.9
-supabase==2.3.4
 pydantic==2.5.3
 pydantic-settings==2.1.0
 python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
 python-multipart==0.0.6
 redis==5.0.1
 rq==1.16.0
@@ -234,12 +234,10 @@ else:
 
 **`backend/.env`** (local development):
 ```env
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/customer_db
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_KEY=your-service-key
-SUPABASE_JWT_SECRET=your-jwt-secret
+DATABASE_URL=postgresql://user:password@hostname.neon.tech:6543/neondb?sslmode=require
+JWT_SECRET_KEY=your-secret-key-change-in-production
 REDIS_URL=redis://localhost:6379
+FRONTEND_URL=http://localhost:3000
 ```
 
 **`backend/shared/database.py`:**
@@ -362,7 +360,7 @@ npx create-next-app@latest frontend \
 cd frontend
 
 # Install dependencies
-npm install @supabase/supabase-js zustand @tanstack/react-query @tanstack/react-table
+npm install zustand @tanstack/react-query @tanstack/react-table
 npm install react-hook-form zod @hookform/resolvers
 npm install lucide-react class-variance-authority clsx tailwind-merge
 
@@ -375,21 +373,77 @@ npx shadcn-ui@latest init
 
 **`frontend/.env.local`:**
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 ```
 
-### Create Basic Layout
+### Create Auth Service
 
-**`frontend/lib/supabase.ts`:**
+**`frontend/lib/auth.ts`:**
 ```typescript
-import { createClient } from '@supabase/supabase-js'
+// Authentication service for managing user authentication
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+interface User {
+  id: string;
+  email: string;
+  full_name?: string;
+}
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+interface AuthResponse {
+  access_token: string;
+  token_type: string;
+  user: User;
+}
+
+class AuthService {
+  private tokenKey = 'auth_token';
+  private userKey = 'auth_user';
+
+  getToken(): string | null {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  private setAuth(token: string, user: User): void {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem(this.tokenKey, token);
+    localStorage.setItem(this.userKey, JSON.stringify(user));
+  }
+
+  private clearAuth(): void {
+    if (typeof window === 'undefined') return;
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userKey);
+  }
+
+  async login(email: string, password: string): Promise<AuthResponse> {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ detail: 'Login failed' }));
+      throw new Error(error.detail || 'Login failed');
+    }
+
+    const data: AuthResponse = await response.json();
+    this.setAuth(data.access_token, data.user);
+    return data;
+  }
+
+  logout(): void {
+    this.clearAuth();
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.getToken();
+  }
+}
+
+export const authService = new AuthService();
+export type { User, AuthResponse };
 ```
 
 **`frontend/app/page.tsx`:**
@@ -429,33 +483,31 @@ Visit: http://localhost:3000
 
 ---
 
-## Step 4: Supabase Setup (5 min)
+## Step 4: Neon.tech Database Setup (3 min)
 
 1. **Create Project:**
-   - Go to https://supabase.com
-   - Create new project (choose region close to you)
-   - Wait for provisioning (~2 min)
+   - Go to https://neon.tech
+   - Sign up or log in
+   - Click "Create Project"
+   - Choose a project name
+   - Select region close to you
+   - Database is ready instantly!
 
-2. **Get Credentials:**
-   - Project Settings → API
-   - Copy:
-     - URL
-     - `anon` public key
-     - `service_role` key (keep secret!)
-     - JWT Secret (Settings → API → JWT Settings)
+2. **Get Connection String:**
+   - On the project dashboard, find "Connection Details"
+   - Copy the **pooled connection string** (port 6543)
+   - It will look like: `postgresql://user:pass@hostname.neon.tech:6543/neondb?sslmode=require`
 
-3. **Enable Email Auth:**
-   - Authentication → Providers
-   - Enable Email provider
-   - Configure email templates (optional)
-
-4. **Update `.env` files:**
-   - Update `backend/.env` with Supabase credentials
-   - Update `frontend/.env.local` with Supabase credentials
+3. **Update `.env` files:**
+   - Update `backend/.env` with:
+     - `DATABASE_URL`: Your Neon.tech connection string
+     - `JWT_SECRET_KEY`: A long random string for JWT signing
+   - Update `frontend/.env.local` with:
+     - `NEXT_PUBLIC_API_URL`: Your backend URL
 
 ---
 
-## Step 5: First Migration & Test
+## Step 5: Run Migrations & Test
 
 ```bash
 cd backend

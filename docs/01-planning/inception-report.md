@@ -19,8 +19,8 @@ A responsive web application that lets teams and individuals create multiple wor
 ### Platform decisions (updated)
 - Frontend: Vercel
 - Backend: Render (Python microservices + worker)
-- Database and storage: Supabase Postgres + Supabase Storage
-- Auth: Supabase Auth (JWT)
+- Database and storage: Neon.tech PostgreSQL + Object Storage
+- Auth: JWT Authentication (JWT)
 
 ## 2) Goals and Success Criteria
 

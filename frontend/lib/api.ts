@@ -1,10 +1,9 @@
-import { supabase } from './supabase';
+import { authService } from './auth';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 
 async function getAuthToken(): Promise<string | null> {
-  const { data: { session } } = await supabase.auth.getSession();
-  return session?.access_token || null;
+  return authService.getToken();
 }
 
 async function fetchWithAuth(url: string, options: RequestInit = {}) {

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { workspaceApi, listApi } from '@/lib/api';
-import { supabase } from '@/lib/supabase';
+import { authService } from '@/lib/auth';
 
 interface Workspace {
   id: string;
@@ -38,8 +38,7 @@ export default function WorkspacePage() {
   }, [workspaceId]);
 
   const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    if (!authService.isAuthenticated()) {
       router.push('/login');
     }
   };

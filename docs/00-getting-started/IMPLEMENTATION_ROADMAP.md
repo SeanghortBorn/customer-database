@@ -25,8 +25,8 @@
 - **Auth:** Supabase JavaScript client
 
 ### Infrastructure
-- **Database:** Supabase Postgres (managed)
-- **Storage:** Supabase Storage (for files)
+- **Database:** Neon.tech PostgreSQL (managed)
+- **Storage:** Object Storage (for files)
 - **Backend Hosting:** Render (Web Services + Background Workers)
 - **Frontend Hosting:** Vercel (auto-preview, edge, great Next.js integration)
 - **Cache/Queue:** Redis (Render managed or Upstash)
@@ -825,12 +825,12 @@ def test_list_workspaces(client: TestClient, auth_headers):
 ### Documentation
 - [FastAPI Docs](https://fastapi.tiangolo.com/)
 - [Next.js Docs](https://nextjs.org/docs)
-- [Supabase Docs](https://supabase.com/docs)
+- [Neon.tech Docs](https://neon.tech/docs)
 - [Tailwind CSS](https://tailwindcss.com/docs)
 - [shadcn/ui](https://ui.shadcn.com/)
 
 ### Example Repos
 - FastAPI + SQLAlchemy: [full-stack-fastapi-template](https://github.com/tiangolo/full-stack-fastapi-template)
-- Next.js + Supabase: [nextjs-supabase-auth](https://github.com/vercel/next.js/tree/canary/examples/with-supabase)
+- Next.js + TypeScript: [nextjs-typescript-example](https://github.com/vercel/next.js/tree/canary/examples/with-typescript)
 
 Let me know which slice you'd like to start with, and I'll provide detailed code for that feature!

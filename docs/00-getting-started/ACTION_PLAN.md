@@ -65,7 +65,7 @@ You have:
 
 **Tasks:**
 1. **Create Supabase Project:**
-   - [ ] Go to https://supabase.com
+   - [ ] Go to https://neon.tech
    - [ ] Create new project
    - [ ] Copy credentials (URL, anon key, service key, JWT secret)
 

@@ -293,13 +293,13 @@ Each release should be:
 └───────────────────┬───────────────────┬─────────────────────┘
                     │                   │
          ┌──────────▼──────────┐  ┌────▼─────┐
-         │  Supabase Postgres  │  │  Redis   │
+         │  Neon.tech PostgreSQL  │  │  Redis   │
          │  • Core data        │  │  • Queue │
          │  • Auth (users)     │  │  • Cache │
          └─────────────────────┘  └──────────┘
          
          ┌─────────────────────┐
-         │  Supabase Storage   │
+         │  Object Storage   │
          │  • File attachments │
          └─────────────────────┘
 ```

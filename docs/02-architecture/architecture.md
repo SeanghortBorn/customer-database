@@ -18,14 +18,14 @@ Date: 2026-02-15
 ## 2) Hosting and Platform (Chosen)
 - Frontend: Vercel (Next.js or similar SPA)
 - Backend: Render (Python services + background workers)
-- Database: Supabase Postgres
-- Object storage: Supabase Storage (for file columns)
+- Database: Neon.tech PostgreSQL
+- Object storage: Object Storage (for file columns)
 
 ## 3) High-Level System Context
 - Clients: Web app (desktop, tablet, mobile)
 - API Edge: API Gateway (Python, FastAPI)
 - Backend: Domain microservices (Python, FastAPI)
-- Data: Supabase Postgres + Storage
+- Data: Neon.tech PostgreSQL + Storage
 - Async: Background worker service + Redis queue
 
 ## 4) Service Decomposition (Microservices)
@@ -33,7 +33,7 @@ Public-facing:
 - API Gateway: auth verification, request routing, rate limits, response shaping
 
 Domain services (internal):
-- Auth and Session Service: Supabase Auth JWT verification and session rules
+- Auth and Session Service: JWT Authentication JWT verification and session rules
 - Workspace and Membership Service: workspaces, invites, roles, permissions
 - List and Item Service: lists, columns, items, item values
 - Relationship Service: cross-list linking, lookups, and integrity checks
@@ -48,19 +48,19 @@ Domain services (internal):
 - Frontend never calls internal services directly
 
 ## 6) Auth and Authorization
-- Primary auth: Supabase Auth (email/password, magic link, or SSO later)
+- Primary auth: JWT Authentication (email/password, magic link, or SSO later)
 - Gateway validates JWT and attaches user context to downstream calls
 - RBAC enforced in services using workspace membership rules
 - Enforce "last owner" rule at the service layer and cover with tests
 
 ## 7) Data Storage and Schema Strategy
-- Supabase Postgres for core data (workspaces, memberships, lists, items)
+- Neon.tech PostgreSQL for core data (workspaces, memberships, lists, items)
 - Column definitions in a dedicated table; item values stored in JSONB per item
 - Relationships stored in a junction table with indexes for fast linking
-- Supabase Storage for file columns and attachments
+- Object Storage for file columns and attachments
 
 ## 8) Data Flow (Typical)
-1. User signs in via Supabase Auth.
+1. User signs in via JWT Authentication.
 2. Client calls API Gateway with JWT.
 3. Gateway verifies JWT, routes to Workspace service.
 4. Workspace service checks roles and returns workspace data.
@@ -91,6 +91,6 @@ Domain services (internal):
 - CD: auto deploy to staging, manual promotion to production
 
 ## 13) Resolved Decisions
-- Auth provider: Supabase Auth (JWT)
+- Auth provider: JWT Authentication (JWT)
 - Hosting: Vercel (frontend), Render (backend), Supabase (DB/storage)
 - API pattern: single Gateway with internal microservices

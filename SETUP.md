@@ -5,7 +5,7 @@
 ### Prerequisites
 - Python 3.11+
 - Node.js 20+
-- PostgreSQL database (or Supabase account)
+- PostgreSQL database (Neon.tech recommended)
 - Conda (recommended) or virtualenv
 
 ## Backend Setup
@@ -30,10 +30,10 @@ pip install -r requirements.txt
 Create a `.env` file in the `backend` directory:
 
 ```env
-DATABASE_URL=postgresql://user:password@localhost:5432/customer_db
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your-anon-key-here
+DATABASE_URL=postgresql://user:password@hostname.neon.tech:6543/neondb?sslmode=require
+JWT_SECRET_KEY=your-secret-key-change-in-production
 FRONTEND_URL=http://localhost:3000
+REDIS_URL=redis://localhost:6379
 ```
 
 ### 5. Run database migrations
@@ -68,10 +68,10 @@ npm install
 Create a `.env.local` file in the `frontend` directory:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 ```
+
+For production, set this to your Render backend URL.
 
 ### 4. Start the development server
 ```bash
@@ -80,22 +80,26 @@ npm run dev
 
 The app will be available at http://localhost:3000
 
-## Supabase Setup
+## Neon.tech Database Setup
 
-### 1. Create a Supabase project
-Go to [supabase.com](https://supabase.com) and create a new project
+### 1. Create a Neon.tech project
+Go to [neon.tech](https://neon.tech) and create a new project
 
-### 2. Get your credentials
-- Project URL: Settings → API → Project URL
-- Anon Key: Settings → API → Project API keys → anon public
+### 2. Get your connection string
+- Go to your project dashboard
+- Click on "Connection Details"
+- Copy the connection string (it will look like: `postgresql://username:password@hostname.neon.tech:5432/database`)
 
-### 3. Enable Email Auth
-- Go to Authentication → Providers
-- Enable Email provider
-- Configure email templates (optional)
+### 3. Configure your backend
+Add the connection string to your `backend/.env` file as `DATABASE_URL`
 
-### 4. Database Connection
-Use the Supabase connection string for your DATABASE_URL, or use an external PostgreSQL database.
+### 4. Run migrations
+```bash
+cd backend
+alembic upgrade head
+```
+
+This will create all necessary tables in your Neon.tech database.
 
 ## Testing the Application
 
@@ -147,7 +151,7 @@ frontend/
 │   └── workspace/      # Workspace and list pages
 └── lib/                # Shared utilities
     ├── api.ts          # API client
-    ├── supabase.ts     # Supabase client
+    ├── auth.ts         # Authentication service
     └── utils.ts        # Helper functions
 ```
 
@@ -155,8 +159,9 @@ frontend/
 
 ### Backend won't start
 - Check DATABASE_URL is correct
-- Ensure PostgreSQL is running
+- Ensure database is accessible (Neon.tech should always be up)
 - Verify migrations are up to date: `alembic upgrade head`
+- Check JWT_SECRET_KEY is set
 
 ### Frontend can't connect to API
 - Verify NEXT_PUBLIC_API_URL in .env.local
@@ -164,9 +169,10 @@ frontend/
 - Check browser console for CORS errors
 
 ### Authentication not working
-- Verify Supabase credentials are correct
-- Check email auth is enabled in Supabase
-- Ensure SUPABASE_URL and SUPABASE_ANON_KEY match in both backend and frontend
+- Verify JWT_SECRET_KEY is set in backend .env
+- Check that user exists in database
+- Ensure passwords meet minimum requirements (6+ characters)
+- Check browser console and backend logs for errors
 
 ## Development Commands
 
@@ -213,9 +219,10 @@ npm start
 2. Set environment variables in Vercel dashboard
 3. Deploy automatically on push to main
 
-### Database (Supabase)
-- Use Supabase managed PostgreSQL
-- Or deploy your own PostgreSQL instance
+### Database (Neon.tech)
+- Use Neon.tech managed PostgreSQL (recommended)
+- Free tier includes 10GB storage and connection pooling
+- See docs/05-operations/NEON_DATABASE_SETUP.md for details
 
 ## Support
 

@@ -2,11 +2,22 @@
 """Test database connection and run migrations"""
 import os
 from sqlalchemy import create_engine, text
+from dotenv import load_dotenv
 
-# URL-encoded password for special characters
-DATABASE_URL = "postgresql://postgres:-sA%21%3FWN%3E%2C025@db.pbbkfqitjsaquaelwbsu.supabase.co:5432/postgres"
+# Load environment variables
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    print("❌ DATABASE_URL environment variable not set")
+    print("Please set DATABASE_URL in your .env file")
+    print("Example: DATABASE_URL=postgresql://user:password@hostname:5432/database")
+    exit(1)
 
 print("Testing database connection...")
+print(f"Database: {DATABASE_URL.split('@')[1] if '@' in DATABASE_URL else 'hidden'}")
+
 try:
     engine = create_engine(DATABASE_URL)
     with engine.connect() as conn:
@@ -27,7 +38,12 @@ try:
             for table in tables:
                 print(f"   - {table}")
         else:
-            print("\n⚠️  No tables found yet. You need to run migrations.")
+            print("\n⚠️  No tables found yet. You need to run migrations:")
+            print("   cd backend && alembic upgrade head")
             
 except Exception as e:
     print(f"❌ Connection failed: {e}")
+    print("\nTroubleshooting:")
+    print("1. Check your DATABASE_URL is correct")
+    print("2. Ensure your database is accessible from this network")
+    print("3. Verify your credentials are correct")

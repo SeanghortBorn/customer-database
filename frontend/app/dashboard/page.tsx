@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { authService } from '@/lib/auth';
 import { workspaceApi } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -29,8 +29,7 @@ export default function DashboardPage() {
   }, []);
 
   const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    if (!authService.isAuthenticated()) {
       router.push('/login');
     }
   };
@@ -66,7 +65,7 @@ export default function DashboardPage() {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    authService.logout();
     router.push('/');
   };
 

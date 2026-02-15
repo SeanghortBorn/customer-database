@@ -25,7 +25,7 @@ The Customer Database System has been fully implemented and is ready to use. All
   - Relationships, comments, and audit logs
 
 #### Authentication & Authorization
-- ✅ Supabase Auth JWT verification
+- ✅ JWT authentication with password hashing
 - ✅ User authentication middleware
 - ✅ Role-based access control (Owner, Admin, Editor, Member)
 - ✅ Workspace membership validation
@@ -97,7 +97,7 @@ The Customer Database System has been fully implemented and is ready to use. All
 - Signup page with validation
 - Password confirmation
 - Error handling
-- Supabase Auth integration
+- Custom JWT authentication service
 
 #### API Client ✅
 - Complete typed API client (`lib/api.ts`)
@@ -167,25 +167,25 @@ The Customer Database System has been fully implemented and is ready to use. All
 
 ### Quick Start
 
-1. **Setup Supabase**
-   - Create a project at supabase.com
-   - Enable Email Auth
-   - Copy your URL and anon key
+1. **Setup Neon.tech Database**
+   - Create a project at neon.tech
+   - Get your connection string
+   - Add it to your backend .env file
 
 2. **Configure Environment**
    ```bash
    # Backend
    cd backend
    cp .env.example .env
-   # Edit .env with your Supabase credentials and database URL
+   # Edit .env with your database URL and JWT secret
    
    # Frontend
    cd frontend
    cp .env.example .env.local
-   # Edit .env.local with your Supabase credentials
+   # Edit .env.local with your API URL
    ```
 
-3. ** Start Everything**
+3. **Start Everything**
    ```bash
    # From project root
    ./start-dev.sh
@@ -329,7 +329,7 @@ All endpoints documented at http://localhost:8000/docs when running.
 
 ## 🔐 Security Features
 
-- ✅ JWT authentication via Supabase
+- ✅ JWT authentication with bcrypt password hashing
 - ✅ Role-based access control
 - ✅ Workspace membership validation
 - ✅ Last owner protection
