@@ -15,6 +15,14 @@ class SignupRequest(BaseModel):
     email: EmailStr
     password: str
     full_name: str | None = None
+    
+    @classmethod
+    def validate_password(cls, v):
+        if len(v) < 6:
+            raise ValueError("Password must be at least 6 characters")
+        if len(v) > 72:
+            raise ValueError("Password cannot be longer than 72 characters")
+        return v
 
 class LoginRequest(BaseModel):
     email: EmailStr
@@ -42,6 +50,12 @@ async def signup(request: SignupRequest, db: Session = Depends(get_db)):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Password must be at least 6 characters"
+            )
+        
+        if len(request.password) > 72:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Password cannot be longer than 72 characters"
             )
         
         # Create new user

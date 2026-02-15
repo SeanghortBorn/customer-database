@@ -27,6 +27,11 @@ export default function SignupPage() {
       return;
     }
 
+    if (password.length > 72) {
+      setError('Password cannot be longer than 72 characters');
+      return;
+    }
+
     setLoading(true);
 
     try {
