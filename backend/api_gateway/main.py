@@ -18,7 +18,12 @@ if frontend_url and frontend_url not in allowed_origins:
 # Remove empty strings
 allowed_origins = [origin for origin in allowed_origins if origin]
 
-print(f"CORS allowed origins: {allowed_origins}")  # Debug log
+print("=" * 60)
+print(f"🚀 Starting Customer Database API")
+print(f"📍 CORS allowed origins: {allowed_origins}")
+print(f"🔑 JWT_SECRET_KEY: {'✅ Set' if os.getenv('JWT_SECRET_KEY') else '❌ NOT SET'}")
+print(f"🗄️  DATABASE_URL: {'✅ Set' if os.getenv('DATABASE_URL') else '❌ NOT SET'}")
+print("=" * 60)
 
 app.add_middleware(
     CORSMiddleware,

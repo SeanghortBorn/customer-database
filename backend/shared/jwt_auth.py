@@ -11,7 +11,12 @@ import os
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # JWT settings
-SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production")
+SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+if not SECRET_KEY or SECRET_KEY == "your-secret-key-change-in-production":
+    print("⚠️  WARNING: JWT_SECRET_KEY not set or using default value!")
+    print("⚠️  Please set JWT_SECRET_KEY environment variable in production")
+    SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production-INSECURE")
+    
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 hours
 
