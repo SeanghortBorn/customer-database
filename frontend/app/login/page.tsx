@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { authService } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -18,29 +18,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        // Handle specific error types
-        if (error.status === 429) {
-          throw new Error('Too many login attempts. Please wait a few minutes and try again.');
-        } else if (error.message.includes('rate limit')) {
-          throw new Error('Rate limit exceeded. Please wait before trying again.');
-        } else if (error.message.includes('Invalid login credentials')) {
-          throw new Error('Invalid email or password. Please try again.');
-        } else if (error.message.includes('Email not confirmed')) {
-          throw new Error('Please check your email and confirm your account first.');
-        }
-        throw error;
-      }
-
-      if (!data?.session) {
-        throw new Error('Login failed. Please try again.');
-      }
-
+      await authService.login(email, password);
       router.push('/dashboard');
     } catch (err: any) {
       const errorMessage = err?.message || 'Failed to login. Please try again.';

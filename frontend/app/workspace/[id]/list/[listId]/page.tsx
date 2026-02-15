@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { listApi, columnApi, itemApi } from '@/lib/api';
-import { supabase } from '@/lib/supabase';
+import { authService } from '@/lib/auth';
 
 interface List {
   id: string;
@@ -57,8 +57,7 @@ export default function ListPage() {
   }, [listId]);
 
   const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    if (!authService.isAuthenticated()) {
       router.push('/login');
     }
   };
