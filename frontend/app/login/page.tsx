@@ -18,16 +18,34 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        // Handle specific error types
+        if (error.status === 429) {
+          throw new Error('Too many login attempts. Please wait a few minutes and try again.');
+        } else if (error.message.includes('rate limit')) {
+          throw new Error('Rate limit exceeded. Please wait before trying again.');
+        } else if (error.message.includes('Invalid login credentials')) {
+          throw new Error('Invalid email or password. Please try again.');
+        } else if (error.message.includes('Email not confirmed')) {
+          throw new Error('Please check your email and confirm your account first.');
+        }
+        throw error;
+      }
+
+      if (!data?.session) {
+        throw new Error('Login failed. Please try again.');
+      }
 
       router.push('/dashboard');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to login');
+    } catch (err: any) {
+      const errorMessage = err?.message || 'Failed to login. Please try again.';
+      setError(errorMessage);
+      console.error('Login error:', err);
     } finally {
       setLoading(false);
     }

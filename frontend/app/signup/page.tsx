@@ -30,16 +30,35 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        // Handle specific error types
+        if (error.status === 429) {
+          throw new Error('Too many signup attempts. Please wait a few minutes and try again.');
+        } else if (error.message.includes('rate limit')) {
+          throw new Error('Rate limit exceeded. Please wait a few minutes before trying again.');
+        } else if (error.message.includes('already registered')) {
+          throw new Error('This email is already registered. Please sign in instead.');
+        }
+        throw error;
+      }
+
+      // Check if email confirmation is required
+      if (data?.user && !data.session) {
+        setError('Please check your email to confirm your account before signing in.');
+        setTimeout(() => router.push('/login'), 3000);
+        return;
+      }
 
       router.push('/dashboard');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to sign up');
+    } catch (err: any) {
+      const errorMessage = err?.message || 'Failed to sign up. Please try again.';
+      setError(errorMessage);
+      console.error('Signup error:', err);
     } finally {
       setLoading(false);
     }
