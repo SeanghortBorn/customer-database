@@ -9,7 +9,7 @@ Date: 2026-02-15
 - Next review: update on major scope or schema change
 
 ## 1) Overview
-This design targets Supabase Postgres with a multi-tenant, workspace-first model. It supports dynamic lists, flexible column definitions, item values stored in JSONB, relationship links across lists, invites, role enforcement, audit logs, and import/export jobs. The schema is optimized for 100k+ records per workspace with predictable query performance.
+This design targets Neon.tech PostgreSQL with a multi-tenant, workspace-first model. It supports dynamic lists, flexible column definitions, item values stored in JSONB, relationship links across lists, invites, role enforcement, audit logs, and import/export jobs. The schema is optimized for 100k+ records per workspace with predictable query performance.
 
 ## 2) Core Principles
 - Workspace is the primary tenant boundary.
@@ -38,7 +38,7 @@ CREATE TYPE audit_action AS ENUM (
 
 ## 4) Tables (Core)
 ### 4.1 users
-Supabase Auth provides `auth.users`. Use `auth.users.id` as the canonical user id. Create a profile table for display info.
+JWT Authentication provides `auth.users`. Use `auth.users.id` as the canonical user id. Create a profile table for display info.
 
 ```sql
 CREATE TABLE user_profiles (
@@ -287,7 +287,7 @@ CREATE POLICY lists_select ON lists
 ## 8) Data Lifecycle
 - Soft delete for lists, items, comments to support recovery.
 - Audit all destructive events with actor, timestamp, and entity details.
-- Files are stored in Supabase Storage; DB stores metadata only.
+- Files are stored in Object Storage; DB stores metadata only.
 
 ## 9) Migration Order
 1. Create enums.

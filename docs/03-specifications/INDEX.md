@@ -46,7 +46,7 @@
 `/api/v1`
 
 ### Authentication
-- Supabase Auth JWT (Bearer token)
+- JWT Authentication JWT (Bearer token)
 - Gateway validates JWT and attaches user context
 - All endpoints require authentication
 

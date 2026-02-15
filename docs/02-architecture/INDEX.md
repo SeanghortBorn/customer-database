@@ -41,10 +41,10 @@
 ### Tech Stack
 - **Frontend:** Next.js 14 (Vercel)
 - **Backend:** FastAPI + Python (Render)
-- **Database:** Supabase Postgres
-- **Auth:** Supabase Auth (JWT)
+- **Database:** Neon.tech PostgreSQL
+- **Auth:** JWT Authentication (JWT)
 - **Jobs:** Python-RQ + Redis
-- **Storage:** Supabase Storage
+- **Storage:** Object Storage
 
 ### Architecture Pattern
 - Single API Gateway for frontend

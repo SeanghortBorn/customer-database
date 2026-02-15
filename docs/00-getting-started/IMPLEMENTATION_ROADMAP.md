@@ -25,8 +25,8 @@
 - **Auth:** Supabase JavaScript client
 
 ### Infrastructure
-- **Database:** Supabase Postgres (managed)
-- **Storage:** Supabase Storage (for files)
+- **Database:** Neon.tech PostgreSQL (managed)
+- **Storage:** Object Storage (for files)
 - **Backend Hosting:** Render (Web Services + Background Workers)
 - **Frontend Hosting:** Vercel (auto-preview, edge, great Next.js integration)
 - **Cache/Queue:** Redis (Render managed or Upstash)
@@ -825,7 +825,7 @@ def test_list_workspaces(client: TestClient, auth_headers):
 ### Documentation
 - [FastAPI Docs](https://fastapi.tiangolo.com/)
 - [Next.js Docs](https://nextjs.org/docs)
-- [Supabase Docs](https://supabase.com/docs)
+- [Supabase Docs](https://neon.tech/docs)
 - [Tailwind CSS](https://tailwindcss.com/docs)
 - [shadcn/ui](https://ui.shadcn.com/)
 

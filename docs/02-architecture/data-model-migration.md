@@ -62,7 +62,7 @@ Date: 2026-02-15
 ## 6) Data Retention
 - Soft delete for lists and items (optional).
 - Log deletion events in audit_logs.
-- Store file metadata in DB; blobs live in Supabase Storage.
+- Store file metadata in DB; blobs live in Object Storage.
 
 ## 7) Seed Data
 - Create one workspace and owner user for dev.

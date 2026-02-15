@@ -56,7 +56,7 @@ Date: 2026-02-15
 - Alerts: error rate, latency p95, queue backlog, worker failures, DB saturation.
 
 ## 8) Performance and Scaling
-- Connection pooling for Supabase Postgres (PgBouncer).
+- Connection pooling for Neon.tech PostgreSQL (PgBouncer).
 - Horizontal scaling for API gateway and workers.
 - Rate limits at the gateway per user and per IP.
 - Cache list schemas and workspace metadata where safe.

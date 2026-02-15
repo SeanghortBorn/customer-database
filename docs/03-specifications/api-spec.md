@@ -10,7 +10,7 @@ Date: 2026-02-15
 
 ## 1) Conventions
 - Base path: /api/v1
-- Auth: Supabase Auth JWT (Bearer token)
+- Auth: JWT Authentication JWT (Bearer token)
 - Pagination: limit, cursor
 - Errors: JSON with code and message
 - Async jobs: POST starts job, GET checks status

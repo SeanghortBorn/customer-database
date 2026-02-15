@@ -25,7 +25,7 @@ Date: 2026-02-15
 - Import/export basic flows
 - JWT verification at API Gateway
 - Background worker retries and failure handling
-- File upload and download flows (Supabase Storage)
+- File upload and download flows (Object Storage)
 - Rate limit behavior (429)
 - Keyboard navigation for table editing
 - Screen reader labels for role/status and inputs

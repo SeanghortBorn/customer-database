@@ -100,7 +100,7 @@ console.log(window.location.origin); // Verify correct domain
 
 ### Manual Test Checklist
 1. ✅ **Sign Up**: Create new account
-   - Should redirect to Supabase Auth
+   - Should redirect to JWT Authentication
    - Should return JWT token
    - Should create user in Supabase
    
@@ -198,7 +198,7 @@ chmod +x test-production.sh
 **Symptom**: `/health/full` shows database error
 **Solution**: Verify `DATABASE_URL` is correct in Render env vars
 
-### Supabase Auth Fails
+### JWT Authentication Fails
 **Symptom**: Login returns 401 or token validation fails
 **Solution**: 
 - Verify `SUPABASE_URL` and `SUPABASE_ANON_KEY` match in both frontend and backend
