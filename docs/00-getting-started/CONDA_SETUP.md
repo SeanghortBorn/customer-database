@@ -83,12 +83,48 @@ Reload your shell:
 source ~/.bashrc  # or source ~/.zshrc
 ```
 
-### 3. Allow direnv in This Project
+### 3. Configure conda Support for direnv
+
+Create `~/.config/direnv/direnvrc` with conda layout support:
+
+```bash
+mkdir -p ~/.config/direnv
+cat > ~/.config/direnv/direnvrc << 'EOF'
+# Conda layout for direnv
+layout_conda() {
+    local CONDA_DEFAULT_ENV="${1:-base}"
+    local CONDA_HOME="${HOME}/anaconda3"  # or ~/miniconda3
+    
+    # Source conda initialization
+    if [ -f "${CONDA_HOME}/etc/profile.d/conda.sh" ]; then
+        source "${CONDA_HOME}/etc/profile.d/conda.sh"
+    else
+        echo "Error: Could not find conda at ${CONDA_HOME}"
+        return 1
+    fi
+    
+    # Activate the conda environment
+    conda activate "$CONDA_DEFAULT_ENV"
+    
+    if [ $? -eq 0 ]; then
+        export CONDA_DEFAULT_ENV="$CONDA_DEFAULT_ENV"
+        export CONDA_PREFIX="$(conda info --base)/envs/$CONDA_DEFAULT_ENV"
+        PATH_add "$CONDA_PREFIX/bin"
+    fi
+}
+EOF
+```
+
+**Note:** Adjust `CONDA_HOME` if your conda installation is in a different location (e.g., `~/miniconda3`).
+
+### 4. Allow direnv in This Project
 
 ```bash
 cd /home/seanghortborn/projects/customer-database
 direnv allow .
 ```
+
+You should see: `direnv: loading ~/projects/customer-database/.envrc`
 
 **That's it!** Now the conda environment will activate automatically whenever you enter this directory.
 
