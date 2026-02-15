@@ -15,10 +15,11 @@ from shared.models import Base  # Import your models
 config = context.config
 
 # Set the SQLAlchemy URL from the environment
-config.set_main_option(
-    'sqlalchemy.url',
-    os.getenv('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/customer_db')
-)
+# Escape % signs by doubling them for ConfigParser
+database_url = os.getenv('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/customer_db')
+# ConfigParser requires % to be escaped as %%
+database_url = database_url.replace('%', '%%')
+config.set_main_option('sqlalchemy.url', database_url)
 
 # Interpret the config file for Python logging
 if config.config_file_name is not None:
