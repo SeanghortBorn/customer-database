@@ -1,30 +1,13 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
-from supabase import create_client, Client
 import os
 from typing import Optional
 from uuid import UUID
 
 from .database import get_db
-from .models import WorkspaceMembership
-
-# Lazy initialization of Supabase client
-_supabase_client: Optional[Client] = None
-
-def get_supabase_client() -> Client:
-    """Get or create Supabase client instance"""
-    global _supabase_client
-    if _supabase_client is None:
-        supabase_url = os.getenv("SUPABASE_URL", "")
-        supabase_key = os.getenv("SUPABASE_ANON_KEY", "")
-        if not supabase_url or not supabase_key:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Supabase configuration missing"
-            )
-        _supabase_client = create_client(supabase_url, supabase_key)
-    return _supabase_client
+from .models import WorkspaceMembership, User
+from .jwt_auth import decode_access_token
 
 security = HTTPBearer()
 
@@ -34,28 +17,48 @@ class CurrentUser:
         self.email = email
 
 async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security)
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
 ) -> CurrentUser:
     """
-    Verify JWT token from Supabase Auth and extract user info
+    Verify JWT token and extract user info
     """
     token = credentials.credentials
     
     try:
-        # Get Supabase client and verify the JWT
-        supabase = get_supabase_client()
-        user_response = supabase.auth.get_user(token)
+        # Decode and verify JWT token
+        payload = decode_access_token(token)
         
-        if not user_response or not user_response.user:
+        if not payload:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid authentication credentials",
                 headers={"WWW-Authenticate": "Bearer"},
             )
         
-        user = user_response.user
-        return CurrentUser(user_id=UUID(user.id), email=user.email or "")
+        user_id = payload.get("sub")
+        email = payload.get("email")
         
+        if not user_id or not email:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token payload",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        
+        # Verify user exists and is active
+        user = db.query(User).filter(User.id == UUID(user_id), User.is_active == True).first()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User not found or inactive",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        
+        return CurrentUser(user_id=UUID(user_id), email=email)
+        
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

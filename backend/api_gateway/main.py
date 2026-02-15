@@ -27,9 +27,8 @@ async def health():
 
 @app.get("/health/full")
 async def health_full():
-    """Comprehensive health check - tests database and Supabase connections"""
+    """Comprehensive health check - tests database connection"""
     from shared.database import SessionLocal
-    from shared.auth import get_supabase_client
     from sqlalchemy import text
     
     health_status = {
@@ -48,15 +47,6 @@ async def health_full():
         health_status["status"] = "degraded"
         health_status["checks"]["database"] = {"status": "error", "message": str(e)}
     
-    # Check Supabase connection
-    try:
-        supabase = get_supabase_client()
-        # Simple check to see if client is initialized
-        health_status["checks"]["supabase"] = {"status": "ok", "message": "Client initialized"}
-    except Exception as e:
-        health_status["status"] = "degraded"
-        health_status["checks"]["supabase"] = {"status": "error", "message": str(e)}
-    
     return health_status
 
 @app.get("/")
@@ -64,12 +54,14 @@ async def root():
     return {"message": "Customer Database API v0.1.0"}
 
 # Include routers
+from services.auth.routes import router as auth_router
 from services.workspace.routes import router as workspace_router
 from services.list.routes import router as list_router
 from services.item.routes import router as item_router
 from services.relationship.routes import router as relationship_router
 from services.audit.routes import router as audit_router
 
+app.include_router(auth_router, prefix="/api/v1", tags=["auth"])
 app.include_router(workspace_router, prefix="/api/v1", tags=["workspaces"])
 app.include_router(list_router, prefix="/api/v1", tags=["lists"])
 app.include_router(item_router, prefix="/api/v1", tags=["items"])
