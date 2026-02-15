@@ -9,10 +9,22 @@ from uuid import UUID
 from .database import get_db
 from .models import WorkspaceMembership
 
-# Supabase client
-supabase_url = os.getenv("SUPABASE_URL", "")
-supabase_key = os.getenv("SUPABASE_ANON_KEY", "")
-supabase: Client = create_client(supabase_url, supabase_key)
+# Lazy initialization of Supabase client
+_supabase_client: Optional[Client] = None
+
+def get_supabase_client() -> Client:
+    """Get or create Supabase client instance"""
+    global _supabase_client
+    if _supabase_client is None:
+        supabase_url = os.getenv("SUPABASE_URL", "")
+        supabase_key = os.getenv("SUPABASE_ANON_KEY", "")
+        if not supabase_url or not supabase_key:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Supabase configuration missing"
+            )
+        _supabase_client = create_client(supabase_url, supabase_key)
+    return _supabase_client
 
 security = HTTPBearer()
 
@@ -30,7 +42,8 @@ async def get_current_user(
     token = credentials.credentials
     
     try:
-        # Verify the JWT with Supabase
+        # Get Supabase client and verify the JWT
+        supabase = get_supabase_client()
         user_response = supabase.auth.get_user(token)
         
         if not user_response or not user_response.user:
