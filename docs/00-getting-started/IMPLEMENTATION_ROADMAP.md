@@ -825,12 +825,12 @@ def test_list_workspaces(client: TestClient, auth_headers):
 ### Documentation
 - [FastAPI Docs](https://fastapi.tiangolo.com/)
 - [Next.js Docs](https://nextjs.org/docs)
-- [Supabase Docs](https://neon.tech/docs)
+- [Neon.tech Docs](https://neon.tech/docs)
 - [Tailwind CSS](https://tailwindcss.com/docs)
 - [shadcn/ui](https://ui.shadcn.com/)
 
 ### Example Repos
 - FastAPI + SQLAlchemy: [full-stack-fastapi-template](https://github.com/tiangolo/full-stack-fastapi-template)
-- Next.js + Supabase: [nextjs-supabase-auth](https://github.com/vercel/next.js/tree/canary/examples/with-supabase)
+- Next.js + TypeScript: [nextjs-typescript-example](https://github.com/vercel/next.js/tree/canary/examples/with-typescript)
 
 Let me know which slice you'd like to start with, and I'll provide detailed code for that feature!

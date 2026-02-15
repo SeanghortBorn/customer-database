@@ -100,12 +100,12 @@ console.log(window.location.origin); // Verify correct domain
 
 ### Manual Test Checklist
 1. ✅ **Sign Up**: Create new account
-   - Should redirect to JWT Authentication
+   - Should redirect to dashboard after signup
    - Should return JWT token
-   - Should create user in Supabase
+   - Should create user in database
    
 2. ✅ **Login**: Sign in with credentials
-   - Should authenticate via Supabase
+   - Should authenticate via JWT
    - Should receive access token
    - Frontend stores token in localStorage
    
@@ -201,14 +201,17 @@ chmod +x test-production.sh
 ### JWT Authentication Fails
 **Symptom**: Login returns 401 or token validation fails
 **Solution**: 
-- Verify `SUPABASE_URL` and `SUPABASE_ANON_KEY` match in both frontend and backend
-- Check Supabase dashboard for service status
+- Verify `JWT_SECRET_KEY` is set in backend environment
+- Ensure the same secret is used consistently (don't change it after issuing tokens)
+- Check backend logs for specific authentication errors
+- Verify user exists in database and is active
 
 ### Frontend Can't Reach Backend
 **Symptom**: All API calls fail with "Failed to fetch"
 **Solution**: 
 - Verify `NEXT_PUBLIC_API_URL` in Vercel matches your Render backend URL
 - Check if backend is actually running on Render
+- Check CORS settings in backend allow your frontend URL
 
 ## 10. Monitoring in Production
 
