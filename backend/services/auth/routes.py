@@ -46,22 +46,30 @@ async def signup(request: SignupRequest, db: Session = Depends(get_db)):
             )
         
         # Validate password
-        if len(request.password) < 6:
+        password_str = str(request.password)
+        password_bytes = password_str.encode('utf-8')
+        
+        print(f"🔍 Password validation:")
+        print(f"   Length in chars: {len(password_str)}")
+        print(f"   Length in bytes: {len(password_bytes)}")
+        
+        if len(password_str) < 6:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Password must be at least 6 characters"
             )
         
-        if len(request.password) > 72:
+        if len(password_bytes) > 72:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Password cannot be longer than 72 characters"
+                detail=f"Password is too long ({len(password_bytes)} bytes). Please use a shorter password."
             )
         
         # Create new user
+        print(f"✅ Creating user: {request.email}")
         user = User(
             email=request.email,
-            password_hash=get_password_hash(request.password),
+            password_hash=get_password_hash(password_str),
             full_name=request.full_name,
             is_active=True
         )
