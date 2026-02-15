@@ -30,6 +30,7 @@ async def health_full():
     """Comprehensive health check - tests database and Supabase connections"""
     from shared.database import SessionLocal
     from shared.auth import get_supabase_client
+    from sqlalchemy import text
     
     health_status = {
         "status": "ok",
@@ -40,7 +41,7 @@ async def health_full():
     # Check database connection
     try:
         db = SessionLocal()
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))
         db.close()
         health_status["checks"]["database"] = {"status": "ok", "message": "Connected"}
     except Exception as e:
