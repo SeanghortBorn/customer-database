@@ -22,7 +22,41 @@ app.add_middleware(
 
 @app.get("/health")
 async def health():
-    return {"status": "ok"}
+    """Basic health check"""
+    return {"status": "ok", "service": "api"}
+
+@app.get("/health/full")
+async def health_full():
+    """Comprehensive health check - tests database and Supabase connections"""
+    from shared.database import SessionLocal
+    from shared.auth import get_supabase_client
+    
+    health_status = {
+        "status": "ok",
+        "service": "api",
+        "checks": {}
+    }
+    
+    # Check database connection
+    try:
+        db = SessionLocal()
+        db.execute("SELECT 1")
+        db.close()
+        health_status["checks"]["database"] = {"status": "ok", "message": "Connected"}
+    except Exception as e:
+        health_status["status"] = "degraded"
+        health_status["checks"]["database"] = {"status": "error", "message": str(e)}
+    
+    # Check Supabase connection
+    try:
+        supabase = get_supabase_client()
+        # Simple check to see if client is initialized
+        health_status["checks"]["supabase"] = {"status": "ok", "message": "Client initialized"}
+    except Exception as e:
+        health_status["status"] = "degraded"
+        health_status["checks"]["supabase"] = {"status": "error", "message": str(e)}
+    
+    return health_status
 
 @app.get("/")
 async def root():
