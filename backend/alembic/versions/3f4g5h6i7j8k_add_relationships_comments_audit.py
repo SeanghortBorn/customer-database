@@ -19,8 +19,17 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # Create enum type for relationship_type
-    op.execute("CREATE TYPE relationship_type AS ENUM ('one_to_many', 'many_to_many')")
+    # Create enum type for relationship_type if it does not exist.
+    op.execute(
+        """
+        DO $$
+        BEGIN
+            IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'relationship_type') THEN
+                CREATE TYPE relationship_type AS ENUM ('one_to_many', 'many_to_many');
+            END IF;
+        END$$;
+        """
+    )
     
     # Create relationships table
     op.create_table('relationships',
@@ -108,4 +117,4 @@ def downgrade() -> None:
     op.drop_index('idx_relationships_list', table_name='relationships')
     op.drop_table('relationships')
     
-    op.execute("DROP TYPE relationship_type")
+    op.execute("DROP TYPE IF EXISTS relationship_type")

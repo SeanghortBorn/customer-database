@@ -2,7 +2,7 @@ from sqlalchemy import Column, String, Text, DateTime, Enum, ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.sql import func
 import uuid
-from shared.database import Base
+from shared.base import Base
 
 class Workspace(Base):
     __tablename__ = 'workspaces'
