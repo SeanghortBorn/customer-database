@@ -7,10 +7,18 @@ app = FastAPI(title="Customer Database API", version="0.1.0")
 # CORS - allow frontend origins
 allowed_origins = [
     "http://localhost:3000",  # Local development
-    os.getenv("FRONTEND_URL", ""),  # Production frontend
+    "https://customer-database-system.vercel.app",  # Production frontend (Vercel)
 ]
+
+# Add FRONTEND_URL from environment if set
+frontend_url = os.getenv("FRONTEND_URL", "").strip()
+if frontend_url and frontend_url not in allowed_origins:
+    allowed_origins.append(frontend_url)
+
 # Remove empty strings
 allowed_origins = [origin for origin in allowed_origins if origin]
+
+print(f"CORS allowed origins: {allowed_origins}")  # Debug log
 
 app.add_middleware(
     CORSMiddleware,
