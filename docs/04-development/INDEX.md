@@ -1,4 +1,4 @@
-# Development - Index
+# Development Index
 
 **Folder:** `04-development/`  
 **Purpose:** Development workflows, feature tracking, and testing
@@ -24,6 +24,13 @@
 - Test data and environments
 - Entry and exit criteria
 - **Read this if:** You're writing tests or setting up CI
+
+### [IMPLEMENTATION_STATUS.md](./IMPLEMENTATION_STATUS.md)
+**Implementation Status**
+- Current progress on each feature
+- Dependencies and blockers
+- Milestones and deadlines
+- **Read this if:** You want to track implementation progress and dependencies
 
 ---
 

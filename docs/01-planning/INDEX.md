@@ -33,6 +33,14 @@
 - Release checklist
 - **Read this if:** You want to understand project timeline and phases
 
+### [PROJECT_STATUS.md](./PROJECT_STATUS.md)
+**Project Status Document**
+- Current project status
+- Milestone completion
+- Risks and issues
+- Next steps
+- **Read this if:** You want to understand the current state of the project
+
 ---
 
 ## 🎯 Key Information

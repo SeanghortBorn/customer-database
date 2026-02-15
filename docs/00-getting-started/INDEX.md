@@ -39,6 +39,14 @@
 - Micro-development strategy
 - **Read this if:** You want detailed technical implementation guidance
 
+### [QUICK_DEPLOY.md](./QUICK_DEPLOY.md)
+**Quick Deployment Guide**
+- Deployment process overview
+- Environment variables and configuration
+- CI/CD pipeline setup
+- Troubleshooting deployment issues
+- **Read this if:** You want to deploy the application quickly
+
 ---
 
 ## 🎯 Recommended Reading Order

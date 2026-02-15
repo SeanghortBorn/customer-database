@@ -34,6 +34,12 @@
 - Seed data approach
 - **Read this if:** You're setting up database migrations
 
+### [MIGRATION_SUMMARY.md](./MIGRATION_SUMMARY.md)
+**Migration Summary**
+- Overview of migration steps and challenges
+- Key considerations for each migration
+- **Read this if:** You want to understand the migration process
+
 ---
 
 ## 🎯 Key Technical Decisions
