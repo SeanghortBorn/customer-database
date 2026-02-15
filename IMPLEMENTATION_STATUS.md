@@ -167,25 +167,25 @@ The Customer Database System has been fully implemented and is ready to use. All
 
 ### Quick Start
 
-1. **Setup Supabase**
-   - Create a project at supabase.com
-   - Enable Email Auth
-   - Copy your URL and anon key
+1. **Setup Neon.tech Database**
+   - Create a project at neon.tech
+   - Get your connection string
+   - Add it to your backend .env file
 
 2. **Configure Environment**
    ```bash
    # Backend
    cd backend
    cp .env.example .env
-   # Edit .env with your Supabase credentials and database URL
+   # Edit .env with your database URL and JWT secret
    
    # Frontend
    cd frontend
    cp .env.example .env.local
-   # Edit .env.local with your Supabase credentials
+   # Edit .env.local with your API URL
    ```
 
-3. ** Start Everything**
+3. **Start Everything**
    ```bash
    # From project root
    ./start-dev.sh

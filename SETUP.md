@@ -68,10 +68,10 @@ npm install
 Create a `.env.local` file in the `frontend` directory:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 ```
+
+For production, set this to your Render backend URL.
 
 ### 4. Start the development server
 ```bash
@@ -80,22 +80,26 @@ npm run dev
 
 The app will be available at http://localhost:3000
 
-## Supabase Setup
+## Neon.tech Database Setup
 
-### 1. Create a Supabase project
-Go to [supabase.com](https://supabase.com) and create a new project
+### 1. Create a Neon.tech project
+Go to [neon.tech](https://neon.tech) and create a new project
 
-### 2. Get your credentials
-- Project URL: Settings → API → Project URL
-- Anon Key: Settings → API → Project API keys → anon public
+### 2. Get your connection string
+- Go to your project dashboard
+- Click on "Connection Details"
+- Copy the connection string (it will look like: `postgresql://username:password@hostname.neon.tech:5432/database`)
 
-### 3. Enable Email Auth
-- Go to Authentication → Providers
-- Enable Email provider
-- Configure email templates (optional)
+### 3. Configure your backend
+Add the connection string to your `backend/.env` file as `DATABASE_URL`
 
-### 4. Database Connection
-Use the Supabase connection string for your DATABASE_URL, or use an external PostgreSQL database.
+### 4. Run migrations
+```bash
+cd backend
+alembic upgrade head
+```
+
+This will create all necessary tables in your Neon.tech database.
 
 ## Testing the Application
 

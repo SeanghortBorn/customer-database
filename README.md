@@ -76,10 +76,10 @@ A modern web app that combines the flexibility of spreadsheets with the power of
 
 ### Backend
 - **Framework**: FastAPI (Python 3.11+)
-- **Database**: PostgreSQL (via Supabase)
+- **Database**: PostgreSQL (via Neon.tech)
 - **ORM**: SQLAlchemy 2.0
 - **Migrations**: Alembic
-- **Auth**: Supabase Auth (JWT)
+- **Auth**: JWT with bcrypt password hashing
 - **Background Jobs**: Python-RQ + Redis
 - **Testing**: pytest
 
@@ -96,8 +96,7 @@ A modern web app that combines the flexibility of spreadsheets with the power of
 - **Hosting**: 
   - Backend: Render
   - Frontend: Vercel
-  - Database: Supabase Postgres
-  - Storage: Supabase Storage
+  - Database: Neon.tech Postgres
   - Cache/Queue: Redis (Render/Upstash)
 - **CI/CD**: GitHub Actions
 - **Monitoring**: Sentry (errors) + platform metrics
@@ -213,9 +212,9 @@ npm run dev
 
 ### Accounts Needed
 
-- **Supabase**: https://supabase.com (free tier)
-- **Render**: https://render.com (free tier)
-- **Vercel**: https://vercel.com (free tier)
+- **Neon.tech**: https://neon.tech (free tier - PostgreSQL database)
+- **Render**: https://render.com (free tier - backend hosting)
+- **Vercel**: https://vercel.com (free tier - frontend hosting)
 
 ---
 
@@ -366,7 +365,7 @@ Services   Workers
    ↓        ↓
    └───┬────┘
        ↓
-PostgreSQL + Redis (Supabase)
+PostgreSQL (Neon.tech) + Redis
 ```
 
 ---
