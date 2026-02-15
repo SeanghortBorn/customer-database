@@ -25,7 +25,7 @@ The Customer Database System has been fully implemented and is ready to use. All
   - Relationships, comments, and audit logs
 
 #### Authentication & Authorization
-- ✅ Supabase Auth JWT verification
+- ✅ JWT authentication with password hashing
 - ✅ User authentication middleware
 - ✅ Role-based access control (Owner, Admin, Editor, Member)
 - ✅ Workspace membership validation
@@ -97,7 +97,7 @@ The Customer Database System has been fully implemented and is ready to use. All
 - Signup page with validation
 - Password confirmation
 - Error handling
-- Supabase Auth integration
+- Custom JWT authentication service
 
 #### API Client ✅
 - Complete typed API client (`lib/api.ts`)
@@ -329,7 +329,7 @@ All endpoints documented at http://localhost:8000/docs when running.
 
 ## 🔐 Security Features
 
-- ✅ JWT authentication via Supabase
+- ✅ JWT authentication with bcrypt password hashing
 - ✅ Role-based access control
 - ✅ Workspace membership validation
 - ✅ Last owner protection

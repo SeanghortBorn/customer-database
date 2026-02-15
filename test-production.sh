@@ -32,7 +32,7 @@ else
 fi
 echo ""
 
-echo "2️⃣ Testing Full Health Check (Database + Supabase)..."
+echo "2️⃣ Testing Full Health Check (Database)..."
 HTTP_CODE=$(curl -s -o response.json -w "%{http_code}" "$BACKEND_URL/health/full")
 if [ "$HTTP_CODE" = "200" ]; then
     echo "✅ Status: $HTTP_CODE"
