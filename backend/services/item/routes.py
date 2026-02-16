@@ -78,6 +78,17 @@ async def update_item_endpoint(
     if not db_item:
         raise HTTPException(status_code=404, detail="Item not found")
     
+    # Verify user has editor+ role
+    db_list = db.query(ListModel).filter(ListModel.id == db_item.list_id).first()
+    membership = db.query(WorkspaceMembership).filter(
+        WorkspaceMembership.workspace_id == db_list.workspace_id,
+        WorkspaceMembership.user_id == current_user.user_id,
+        WorkspaceMembership.status == 'accepted'
+    ).first()
+    
+    if not membership or membership.role not in ['owner', 'admin', 'editor']:
+        raise HTTPException(status_code=403, detail="Insufficient permissions")
+    
     return update_item(db, item_id, item_update, current_user.user_id)
 
 @router.delete("/items/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -90,6 +101,17 @@ async def archive_item_endpoint(
     db_item = get_item(db, item_id)
     if not db_item:
         raise HTTPException(status_code=404, detail="Item not found")
+    
+    # Verify user has editor+ role
+    db_list = db.query(ListModel).filter(ListModel.id == db_item.list_id).first()
+    membership = db.query(WorkspaceMembership).filter(
+        WorkspaceMembership.workspace_id == db_list.workspace_id,
+        WorkspaceMembership.user_id == current_user.user_id,
+        WorkspaceMembership.status == 'accepted'
+    ).first()
+    
+    if not membership or membership.role not in ['owner', 'admin', 'editor']:
+        raise HTTPException(status_code=403, detail="Insufficient permissions")
     
     archive_item(db, item_id, current_user.user_id)
     return None

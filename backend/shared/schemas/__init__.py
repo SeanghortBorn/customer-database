@@ -84,6 +84,7 @@ class ColumnCreate(BaseModel):
 
 class ColumnUpdate(BaseModel):
     name: Optional[str] = None
+    type: Optional[str] = None
     position: Optional[int] = None
     is_required: Optional[bool] = None
     is_unique: Optional[bool] = None
