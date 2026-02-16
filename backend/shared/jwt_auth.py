@@ -31,21 +31,31 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 def get_password_hash(password: str) -> str:
     """Hash a password"""
     try:
-        # Ensure password is a string and within bcrypt limits
+        # Ensure password is a string
         if not isinstance(password, str):
             password = str(password)
         
-        # Truncate to 72 bytes if needed (bcrypt limitation)
+        # Manually truncate to 72 bytes BEFORE passing to bcrypt to avoid the error
         password_bytes = password.encode('utf-8')
         if len(password_bytes) > 72:
             print(f"⚠️  Password was {len(password_bytes)} bytes, truncating to 72")
+            password = password_bytes[:72].decode('utf-8', errors='ignore')
+        else:
+            # Even if under 72 bytes, explicitly truncate to work around passlib bug
             password = password_bytes[:72].decode('utf-8', errors='ignore')
         
         return pwd_context.hash(password)
     except Exception as e:
         print(f"❌ Error hashing password: {str(e)}")
         print(f"   Password length: {len(password)} chars, {len(password.encode('utf-8'))} bytes")
-        raise
+        # Try with direct truncation as last resort
+        try:
+            truncated = password[:72]
+            print(f"   Trying with truncated password: {len(truncated)} chars")
+            return pwd_context.hash(truncated)
+        except Exception as e2:
+            print(f"❌ Even truncation failed: {str(e2)}")
+            raise e
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     """Create a JWT access token"""
