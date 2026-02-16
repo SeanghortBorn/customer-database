@@ -2,17 +2,10 @@
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
-from passlib.context import CryptContext
+import bcrypt
 from sqlalchemy.orm import Session
 from uuid import UUID
 import os
-
-# Password hashing - configure bcrypt to auto-truncate instead of erroring
-pwd_context = CryptContext(
-    schemes=["bcrypt"], 
-    deprecated="auto",
-    bcrypt__truncate_error=False  # Auto-truncate passwords > 72 bytes instead of throwing error
-)
 
 # JWT settings
 SECRET_KEY = os.getenv("JWT_SECRET_KEY")
@@ -26,36 +19,36 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 hours
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a password against its hash"""
-    return pwd_context.verify(plain_password, hashed_password)
+    try:
+        # Convert strings to bytes
+        password_bytes = plain_password.encode('utf-8')
+        hash_bytes = hashed_password.encode('utf-8')
+        return bcrypt.checkpw(password_bytes, hash_bytes)
+    except Exception as e:
+        print(f"❌ Password verification error: {str(e)}")
+        return False
 
 def get_password_hash(password: str) -> str:
-    """Hash a password"""
+    """Hash a password using bcrypt directly (bypassing passlib to avoid the 72-byte bug)"""
     try:
-        # Ensure password is a string
-        if not isinstance(password, str):
-            password = str(password)
-        
-        # Manually truncate to 72 bytes BEFORE passing to bcrypt to avoid the error
+        # Convert to bytes
         password_bytes = password.encode('utf-8')
-        if len(password_bytes) > 72:
-            print(f"⚠️  Password was {len(password_bytes)} bytes, truncating to 72")
-            password = password_bytes[:72].decode('utf-8', errors='ignore')
-        else:
-            # Even if under 72 bytes, explicitly truncate to work around passlib bug
-            password = password_bytes[:72].decode('utf-8', errors='ignore')
         
-        return pwd_context.hash(password)
+        # Truncate to 72 bytes if needed (bcrypt hard limit)
+        if len(password_bytes) > 72:
+            print(f"⚠️  Password is {len(password_bytes)} bytes, truncating to 72")
+            password_bytes = password_bytes[:72]
+        
+        # Generate salt and hash
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(password_bytes, salt)
+        
+        # Return as string
+        return hashed.decode('utf-8')
     except Exception as e:
         print(f"❌ Error hashing password: {str(e)}")
         print(f"   Password length: {len(password)} chars, {len(password.encode('utf-8'))} bytes")
-        # Try with direct truncation as last resort
-        try:
-            truncated = password[:72]
-            print(f"   Trying with truncated password: {len(truncated)} chars")
-            return pwd_context.hash(truncated)
-        except Exception as e2:
-            print(f"❌ Even truncation failed: {str(e2)}")
-            raise e
+        raise Exception(f"Failed to hash password: {str(e)}")
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     """Create a JWT access token"""
