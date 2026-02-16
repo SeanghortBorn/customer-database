@@ -7,8 +7,12 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 import os
 
-# Password hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Password hashing - configure bcrypt to auto-truncate instead of erroring
+pwd_context = CryptContext(
+    schemes=["bcrypt"], 
+    deprecated="auto",
+    bcrypt__truncate_error=False  # Auto-truncate passwords > 72 bytes instead of throwing error
+)
 
 # JWT settings
 SECRET_KEY = os.getenv("JWT_SECRET_KEY")
