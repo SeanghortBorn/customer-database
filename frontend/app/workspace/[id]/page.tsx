@@ -31,17 +31,31 @@ export default function WorkspacePage() {
   const [newListName, setNewListName] = useState('');
   const [newListDesc, setNewListDesc] = useState('');
   const [error, setError] = useState('');
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
-    checkAuth();
-    loadData();
-  }, [workspaceId]);
-
-  const checkAuth = async () => {
-    if (!authService.isAuthenticated()) {
-      router.push('/login');
-    }
-  };
+    const initPage = async () => {
+      if (!authService.isAuthenticated()) {
+        router.push('/login');
+        return;
+      }
+      
+      try {
+        const [workspaceData, listsData] = await Promise.all([
+          workspaceApi.get(workspaceId),
+          listApi.list(workspaceId),
+        ]);
+        setWorkspace(workspaceData);
+        setLists(listsData);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    initPage();
+  }, [workspaceId, router]);
 
   const loadData = async () => {
     try {
@@ -53,14 +67,17 @@ export default function WorkspacePage() {
       setLists(listsData);
     } catch (err: any) {
       setError(err.message);
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleCreateList = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Prevent double submissions
+    if (creating) return;
+    
     setError('');
+    setCreating(true);
 
     try {
       await listApi.create(workspaceId, {
@@ -74,6 +91,8 @@ export default function WorkspacePage() {
       loadData();
     } catch (err: any) {
       setError(err.message);
+    } finally {
+      setCreating(false);
     }
   };
 
@@ -196,14 +215,16 @@ export default function WorkspacePage() {
                   type="button"
                   onClick={() => setShowCreateModal(false)}
                   className="rounded-md bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-300"
+                  disabled={creating}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500"
+                  className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={creating}
                 >
-                  Create
+                  {creating ? 'Creating...' : 'Create'}
                 </button>
               </div>
             </form>

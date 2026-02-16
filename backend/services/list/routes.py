@@ -5,6 +5,7 @@ from uuid import UUID
 
 from shared.database import get_db
 from shared.auth import get_current_user, get_workspace_membership, require_role, CurrentUser
+from shared.models import WorkspaceMembership
 from shared.schemas import (
     ListCreate, ListUpdate, ListResponse,
     ColumnCreate, ColumnUpdate, ColumnResponse
@@ -73,7 +74,6 @@ async def update_list_endpoint(
         raise HTTPException(status_code=404, detail="List not found")
     
     # Verify user has editor+ role
-    from shared.models import WorkspaceMembership
     membership = db.query(WorkspaceMembership).filter(
         WorkspaceMembership.workspace_id == db_list.workspace_id,
         WorkspaceMembership.user_id == current_user.user_id,
@@ -97,7 +97,6 @@ async def archive_list_endpoint(
         raise HTTPException(status_code=404, detail="List not found")
     
     # Verify user has editor+ role
-    from shared.models import WorkspaceMembership
     membership = db.query(WorkspaceMembership).filter(
         WorkspaceMembership.workspace_id == db_list.workspace_id,
         WorkspaceMembership.user_id == current_user.user_id,
@@ -124,7 +123,6 @@ async def create_column_endpoint(
         raise HTTPException(status_code=404, detail="List not found")
     
     # Verify user has editor+ role
-    from shared.models import WorkspaceMembership
     membership = db.query(WorkspaceMembership).filter(
         WorkspaceMembership.workspace_id == db_list.workspace_id,
         WorkspaceMembership.user_id == current_user.user_id,
